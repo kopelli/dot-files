@@ -1,0 +1,9 @@
+[user]
+	email = kopelli@gmail.com
+	name = Steven Evans
+[core]
+	autocrlf = true
+	safecrlf = false
+	pager = cat
+[alias]
+	unstage = reset HEAD --
