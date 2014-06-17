@@ -21,7 +21,7 @@ for /F "usebackq delims==" %%f IN (`dir /b "_*"`) DO (
         SET _full_path_=%%g
     )
     del /q /f %USERPROFILE%\!_dot_file_!
-    mklink %USERPROFILE%\!_dot_file_! !_full_path_!
+    mklink /h %USERPROFILE%\!_dot_file_! !_full_path_!
 )
 :: --delete actual file if it exists
 :: --mklink <Full path for link file> <full path of %%f>
