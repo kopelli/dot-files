@@ -100,7 +100,7 @@ set laststatus=2
 " => Bundles
 """"""""""""""""""""""""""""""""""""""""
 set rtp+=~/vimfiles/bundle/vundle
-let path='~/vimfiles/bunde'
+let path='~/vimfiles/bundle'
 call vundle#rc(path)
 
 " Let Vundle manage Vundle
