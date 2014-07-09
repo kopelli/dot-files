@@ -56,6 +56,10 @@ set number
 " Start scrolling 5 lines before the horizontal window border
 set scrolloff=5
 
+if has("gui_win32")
+    set guioptions-=T
+endif
+
 """"""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """"""""""""""""""""""""""""""""""""""""
