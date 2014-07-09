@@ -122,6 +122,8 @@ Bundle 'bling/vim-airline'
     " https://github.com/bling/vim-airline
 Bundle 'Lokaltog/powerline'
     " https://github.com/Lokaltog/powerline
+Bundle 'groenewege/vim-less'
+    " https://github.com/groenewege/vim-less
 "Bundle 'leadgarland/typescript-vim'
 "    " https://github.com/leafgarland/typescript-vim
 "Bundle 'venusjs/venus.vim'
