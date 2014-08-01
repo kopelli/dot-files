@@ -1,4 +1,4 @@
-alias ls='ls -l -a'
+alias ls='ls -l -A -p -G --color'
 
 # Note: ~/.ssh/environment should not be used, as it already has a different purpose in SSH.
 env=~/.ssh/agent.env
