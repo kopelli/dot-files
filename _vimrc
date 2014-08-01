@@ -118,21 +118,15 @@ Bundle 'gmarik/vundle'
 
 " My bundles here:
 Bundle 'scrooloose/nerdtree'
-	" https://github.com/scrooloose/nerdtree
 Bundle 'majutsushi/tagbar'
 	" http://majutsushi.github.io/tagbar
 Bundle 'christoomey/vim-tmux-navigator'
-	" https://github.com/christoomey/vim-tmux-navigator
 Bundle 'bling/vim-airline'
-    " https://github.com/bling/vim-airline
 Bundle 'Lokaltog/powerline'
-    " https://github.com/Lokaltog/powerline
 Bundle 'groenewege/vim-less'
-    " https://github.com/groenewege/vim-less
 "Bundle 'leadgarland/typescript-vim'
-"    " https://github.com/leafgarland/typescript-vim
 "Bundle 'venusjs/venus.vim'
-"    " https://github.com/venusjs/venus.vim
+Bundle 'bronson/vim-trailing-whitespace'
 
 " vim-scripts repos
 
