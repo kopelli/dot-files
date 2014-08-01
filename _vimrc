@@ -96,6 +96,7 @@ set nowrap
 " prior to saving the file
 autocmd BufWritePre *.html :%s/\s\+$//e
 autocmd BufWritePre *.less :%s/\s\+$//e
+autocmd BufWritePre *.js :%s/\s\+$//e
 
 """"""""""""""""""""""""""""""""""""""""
 " => Status Line
