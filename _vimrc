@@ -1,5 +1,5 @@
-" Allows for folder specific .vimrc files
-set exrc
+"" Allows for folder specific .vimrc files
+"set exrc
 " Disallow use of :autocmd, shell, and write commands
 set secure
 set nocompatible
@@ -10,8 +10,7 @@ filetype off
 " => General
 """"""""""""""""""""""""""""""""""""""""
 " Enable filetype plugins
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -23,7 +22,7 @@ set clipboard=unnamed
 inoremap ;; <ESC>
 
 " :CDC = Change to Directory of Current file
-command CDC cd %:p:h<CR>
+command CDC cd %:p:h
 
 
 """"""""""""""""""""""""""""""""""""""""
@@ -97,6 +96,7 @@ set nowrap
 autocmd BufWritePre *.html :%s/\s\+$//e
 autocmd BufWritePre *.less :%s/\s\+$//e
 autocmd BufWritePre *.js :%s/\s\+$//e
+autocmd BufWritePre *.java :%s/\s\+$//e
 
 """"""""""""""""""""""""""""""""""""""""
 " => Status Line
@@ -127,6 +127,7 @@ Bundle 'groenewege/vim-less'
 "Bundle 'leadgarland/typescript-vim'
 "Bundle 'venusjs/venus.vim'
 Bundle 'bronson/vim-trailing-whitespace'
+Bundle 'PProvost/vim-ps1'
 
 " vim-scripts repos
 
