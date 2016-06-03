@@ -22,7 +22,8 @@ set clipboard=unnamed
 inoremap ;; <ESC>
 
 " :CDC = Change to Directory of Current file
-command CDC cd %:p:h
+"   NOTE: the ! means "overwrite the existing command
+command! CDC cd %:p:h
 
 
 """"""""""""""""""""""""""""""""""""""""
@@ -57,6 +58,7 @@ set scrolloff=5
 
 if has("gui_win32")
     set guioptions-=T
+    set guifont=Input
 endif
 
 """"""""""""""""""""""""""""""""""""""""
@@ -70,6 +72,14 @@ set encoding=utf8
 
 " Use Windows as the standard file type
 set ffs=dos,unix,mac
+
+""""""""""""""""""""""""""""""""""""""""
+" => File type detection
+""""""""""""""""""""""""""""""""""""""""
+" MSBuild targets
+au BufNewFile,BufRead *.targets set filetype=xml
+au BufNewFile,BufRead *.ps1 set filetype=ps1
+au BufNewFile,BufRead *.psm1 set filetype=ps1
 
 """"""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -97,6 +107,9 @@ autocmd BufWritePre *.html :%s/\s\+$//e
 autocmd BufWritePre *.less :%s/\s\+$//e
 autocmd BufWritePre *.js :%s/\s\+$//e
 autocmd BufWritePre *.java :%s/\s\+$//e
+
+" Auto-source this file when we write it
+autocmd! BufWritePost .vimrc source %
 
 """"""""""""""""""""""""""""""""""""""""
 " => Status Line
