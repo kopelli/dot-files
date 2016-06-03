@@ -121,29 +121,40 @@ set laststatus=2
 """"""""""""""""""""""""""""""""""""""""
 " => Bundles
 """"""""""""""""""""""""""""""""""""""""
-set rtp+=~/vimfiles/bundle/vundle
-let path='~/vimfiles/bundle'
-call vundle#rc(path)
+let g:NERDTreeCopyCmd= 'cp -r'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin('~/.vim/bundle')
 
 " Let Vundle manage Vundle
 " required!
-Bundle 'gmarik/vundle'
+Plugin 'VundleVim/Vundle.vim'
 
 " My bundles here:
-Bundle 'scrooloose/nerdtree'
-Bundle 'majutsushi/tagbar'
-	" http://majutsushi.github.io/tagbar
-Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'bling/vim-airline'
-Bundle 'Lokaltog/powerline'
-Bundle 'groenewege/vim-less'
-"Bundle 'leadgarland/typescript-vim'
-"Bundle 'venusjs/venus.vim'
-Bundle 'bronson/vim-trailing-whitespace'
-Bundle 'PProvost/vim-ps1'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'vim-airline/vim-airline'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'PProvost/vim-ps1'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'fxn/vim-monochrome'
+Plugin 'theWildSushii/SweetCandy.vim'
+Plugin 'vim-scripts/The-Vim-Gardener'
+"Plugin 'tpope/sensible'
+
+"Plugin 'leafgarland/typescript-vim'
+"Plugin 'groenewege/vim-less'
+"Plugin 'xolox/vim-misc'
+"Plugin 'xolox/vim-easytags'
+"Plugin 'vim-scripts/auto_autoread.vim'
+"Plugin 'leadgarland/typescript-vim'
+"Plugin 'venusjs/venus.vim'
+"Plugin 'majutsushi/tagbar'
 
 " vim-scripts repos
 
 " non-Github repos
 
 " Git repos from local system/network
+call vundle#end()           " required
+filetype plugin indent on   " required
