@@ -166,6 +166,7 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'fxn/vim-monochrome'
 Plugin 'theWildSushii/SweetCandy.vim'
 Plugin 'vim-scripts/The-Vim-Gardener'
+Plugin 'kien/rainbow_parenthesis.vim'
 "Plugin 'tpope/sensible'
 
 "Plugin 'leafgarland/typescript-vim'
