@@ -44,3 +44,6 @@ elif ! agent_has_keys; then
 fi
 
 unset env
+
+export NVM_DIR="/c/Users/212400609/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
