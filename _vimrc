@@ -193,6 +193,7 @@ Plugin 'fxn/vim-monochrome'
 Plugin 'theWildSushii/SweetCandy.vim'
 Plugin 'vim-scripts/The-Vim-Gardener'
 Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'pangloss/vim-javascript'
 "Plugin 'tpope/sensible'
 
 "Plugin 'leafgarland/typescript-vim'
