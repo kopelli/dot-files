@@ -6,8 +6,12 @@
 	pager = cat
 [alias]
 	unstage = reset HEAD --
-    root = rev-parse --show-toplevel
+	root = rev-parse --show-toplevel
+	please = push --force-with-lease
+	amendit = commit --amend --no-edit
+	st = status --short --branch
+	glog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
 [push]
 	default = simple
 [include]
-    path = .gitconfig-local
+	path = .gitconfig-local
