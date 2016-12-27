@@ -5,11 +5,10 @@ set secure
 set nocompatible
 filetype off
 
-"Testing
 """"""""""""""""""""""""""""""""""""""""
 " => General
 """"""""""""""""""""""""""""""""""""""""
-" Enable filetype plugins
+" Enables Plugins, File Indention detection and Filetype detection
 filetype plugin indent on
 
 " Set to auto read when a file is changed from the outside
@@ -102,6 +101,8 @@ set ffs=dos,unix,mac
 """"""""""""""""""""""""""""""""""""""""
 " MSBuild targets
 au BufNewFile,BufRead *.targets set filetype=xml
+
+" Powershell
 au BufNewFile,BufRead *.ps1 set filetype=ps1
 au BufNewFile,BufRead *.psm1 set filetype=ps1
 
@@ -114,9 +115,9 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 
-" 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
+" 1 tab == 2 spaces
+set shiftwidth=2
+set tabstop=2
 
 " Auto indent
 set ai
@@ -204,6 +205,10 @@ Plugin 'kien/rainbow_parentheses.vim'
 "Plugin 'leadgarland/typescript-vim'
 "Plugin 'venusjs/venus.vim'
 "Plugin 'majutsushi/tagbar'
+"Plugin 'scrooloose/nerdcommenter'
+"Plugin 'garbas/vim-snipmate'
+"Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'vim-syntastic/syntastic'
 
 " vim-scripts repos
 
