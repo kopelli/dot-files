@@ -5,11 +5,10 @@ set secure
 set nocompatible
 filetype off
 
-"Testing
 """"""""""""""""""""""""""""""""""""""""
 " => General
 """"""""""""""""""""""""""""""""""""""""
-" Enable filetype plugins
+" Enables Plugins, File Indention detection and Filetype detection
 filetype plugin indent on
 
 " Set to auto read when a file is changed from the outside
@@ -102,6 +101,8 @@ set ffs=dos,unix,mac
 """"""""""""""""""""""""""""""""""""""""
 " MSBuild targets
 au BufNewFile,BufRead *.targets set filetype=xml
+
+" Powershell
 au BufNewFile,BufRead *.ps1 set filetype=ps1
 au BufNewFile,BufRead *.psm1 set filetype=ps1
 
@@ -114,9 +115,9 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 
-" 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
+" 1 tab == 2 spaces
+set shiftwidth=2
+set tabstop=2
 
 " Auto indent
 set ai
@@ -182,28 +183,31 @@ call vundle#begin('~/.vim/bundle')
 Plugin 'VundleVim/Vundle.vim'
 
 " My bundles here:
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'vim-airline/vim-airline'
-Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'PProvost/vim-ps1'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'christoomey/vim-tmux-navigator'
+"Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'fxn/vim-monochrome'
-Plugin 'theWildSushii/SweetCandy.vim'
-Plugin 'vim-scripts/The-Vim-Gardener'
-Plugin 'kien/rainbow_parentheses.vim'
-"Plugin 'pangloss/vim-javascript'
-"Plugin 'tpope/sensible'
-
-"Plugin 'leafgarland/typescript-vim'
+"Plugin 'garbas/vim-snipmate'
 "Plugin 'groenewege/vim-less'
-"Plugin 'xolox/vim-misc'
-"Plugin 'xolox/vim-easytags'
-"Plugin 'vim-scripts/auto_autoread.vim'
-"Plugin 'leadgarland/typescript-vim'
-"Plugin 'venusjs/venus.vim'
+Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'leafgarland/typescript-vim'
 "Plugin 'majutsushi/tagbar'
+"Plugin 'pangloss/vim-javascript'
+"Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
+Plugin 'theWildSushii/SweetCandy.vim'
+"Plugin 'tpope/sensible'
+"Plugin 'venusjs/venus.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-scripts/The-Vim-Gardener'
+"Plugin 'vim-scripts/auto_autoread.vim'
+"Plugin 'vim-syntastic/syntastic'
+"Plugin 'xolox/vim-easytags'
+"Plugin 'xolox/vim-misc'
+
 
 " vim-scripts repos
 
