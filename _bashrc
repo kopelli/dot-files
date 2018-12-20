@@ -1,4 +1,13 @@
-alias ls='ls -l -A -p -G --color'
+platform='unknown'
+unameStr=$(uname | tr '[:upper:]' '[:lower:]')
+if [[ "$unameStr" == 'darwin' ]]; then
+  alias ls='ls -lApGv'
+elif [[ "$unameStr" == 'unknown' ]]; then
+  alias ls='ls -lApGv --color'
+else
+  alias ls='ls -lA'
+fi
+
 alias cls='reset'
 LS_COLORS=$LS_COLORS:'di=1;36:' ; export LS_COLORS
 
@@ -46,5 +55,11 @@ fi
 
 unset env
 
-export NVM_DIR="/c/Users/212400609/.nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Run twolfson/sexy-bash-prompt
+. ~/.bash_prompt
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
