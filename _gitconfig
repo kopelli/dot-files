@@ -16,12 +16,15 @@
     fuckit = reset --hard HEAD
 	glog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
     graph = log --graph --oneline --decorate --all --full-history --author-date-order --no-notes
+    graphit = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    ignore="!sh -c \" echo $1>>.gitignore\" -"
     minor = commit -am "Make minor changes"
 	please = push --force-with-lease
     polish = commit -am "Polish"
 	root = rev-parse --show-toplevel
     s = status --short --branch
 	st = status --short --branch
+    this = !git init && git add . && git commit -m \"initial commit\" --allow-empty
     typo = commit -am "Fix typo"
     undo = reset --soft HEAD^
 	unstage = reset HEAD --
@@ -30,6 +33,13 @@
     followTags = true
 [include]
 	path = .gitconfig-local
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[commit]
+    template = .git-commit-template 
 [diff]
     tool = bcomp
 [difftool]
@@ -37,4 +47,4 @@
 [difftool "bcomp"]
     cmd = \"c:/Program Files (x86)/Beyond Compare 3/BComp.exe\" \"$LOCAL\" \"$REMOTE\"
 [help]
-	autocorrect = 1
+    autoCorrect = 1
