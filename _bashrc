@@ -1,6 +1,27 @@
+# For more things to flush this out, check out http://tldp.org/LDP/abs/html/sample-bashrc.html
+
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+
 alias ls='ls -l -A -p -G --color'
 alias cls='reset'
+alias quit='exit'
 LS_COLORS=$LS_COLORS:'di=1;36:' ; export LS_COLORS
+
+# Append history across sessions
+shopt -s histappend
+
+# Verify that history can be appended, or recover if something goes wrong
+shopt -s histreedit
+shopt -s histverify
+
+# Ignore history commands that start with whitespace or duplicate commands
+HISTCONTROL='ignoreboth'
+
+# Commit history for the window, clear history, and reload all history before showing the prompt
+PROMPT_COMMAND="history -a;history -c;history -r; $PROMPT_COMMAND"
 
 # Note: ~/.ssh/environment should not be used, as it already has a different purpose in SSH.
 env=~/.ssh/agent.env
