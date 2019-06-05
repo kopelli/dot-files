@@ -1,0 +1,41 @@
+#!/bin/sh
+
+if [ "`echo -n`" = "-n" ]; then
+	N_ARG=""
+	C_ARG="\c"
+else
+	N_ARG="-n"
+	C_ARG=""
+fi
+
+# Fallback to `master` if no arguments passed
+if [ "$1" != "" ]; then
+	TARGET=$1
+else
+	TARGET=master
+fi
+
+# Include the commit message, author name (respecting .mailmap)
+# and the short hash in parentheses.
+LOG_FORMAT="\"%s (_%aN_) (%h)\""
+
+# Compare against HEAD (the latest commit).
+SOURCE="HEAD"
+
+# Filter to commits that pass the conventional commit format.
+# See: https://www.conventionalcommits.org/
+COMMIT_FILTER="^\"[a-z]+(\([a-z]+\))?:\s.+"
+
+# `awk` prefix to prepend the hyphen to render as a Markdown list.
+PREFIX='{print "- " $0}'
+
+# Write the header
+echo $N_ARG "## "$TARGET"\n\n"$C_ARG
+echo $N_ARG "Write your release notes on this line.\n\n"$C_ARG
+
+# Fill and sort the actual changelog
+git log --oneline --pretty=format:"$LOG_FORMAT" $SOURCE...$TARGET \
+| grep -E "$COMMIT_FILTER" \
+| sed -e 's/^"//' -e 's/"$//' \
+| sort -k1 \
+| awk "$PREFIX"
