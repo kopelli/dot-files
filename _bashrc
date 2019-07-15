@@ -21,6 +21,9 @@ alias cls='reset'
 alias quit='exit'
 LS_COLORS=$LS_COLORS:'di=1;36:' ; export LS_COLORS
 
+# Set the 'history' command to show when the previous commands were executed
+HISTTIMEFORMAT="[%F %T] "
+
 # Append history across sessions
 shopt -s histappend
 
