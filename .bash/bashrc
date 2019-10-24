@@ -15,24 +15,9 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 unset SOURCE
 
-source $DIR/000.ls-default.sh
-
-source $DIR/000.cmd-alias.sh
-
-source $DIR/000.cp.sh
-
-source $DIR/000.mkdir.sh
-
-source $DIR/000.share-history.sh
-
-source $DIR/000.ssh-agent.sh
-
-source $DIR/000.nvm.sh
-
-source $DIR/900.prompt.sh
-
-source $DIR/000.rvm.sh
-
-source $DIR/000.git-alias.sh
+# Borrowing this idea from https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
+for FILE in $DIR/*.sh ; do
+  source "$FILE"
+done
 
 unset DIR
