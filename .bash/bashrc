@@ -23,8 +23,6 @@ alias cp='cp -rv'
 # Always create the full path to a folder
 alias mkdir='mkdir -pv'
 
-LS_COLORS=$LS_COLORS:'di=1;36:' ; export LS_COLORS
-
 # Set the 'history' command to show when the previous commands were executed
 HISTTIMEFORMAT="[%F %T] "
 
