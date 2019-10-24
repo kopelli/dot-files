@@ -28,8 +28,7 @@ source $DIR/000.ssh-agent.sh
 
 source $DIR/000.nvm.sh
 
-# Run twolfson/sexy-bash-prompt
-. ~/.bash_prompt
+source $DIR/900.prompt.sh
 
 source $DIR/000.rvm.sh
 
