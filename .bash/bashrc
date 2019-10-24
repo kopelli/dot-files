@@ -32,7 +32,6 @@ source $DIR/000.nvm.sh
 # Run twolfson/sexy-bash-prompt
 . ~/.bash_prompt
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+source $DIR/000.rvm.sh
 
 source $DIR/000.git-alias.sh
