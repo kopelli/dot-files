@@ -3,7 +3,9 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-platform='unknown'
+# Need to find where this file is being run from
+# Since it will be symlinked, need to trace down the *actual* location.
+# See https://stackoverflow.com/a/246128/6504 for more explaination.
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do #resolve $SOURCE until it is no longer a symlink
   DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
@@ -11,6 +13,7 @@ while [ -h "$SOURCE" ]; do #resolve $SOURCE until it is no longer a symlink
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+unset SOURCE
 
 source $DIR/000.ls-default.sh
 
@@ -31,3 +34,5 @@ source $DIR/900.prompt.sh
 source $DIR/000.rvm.sh
 
 source $DIR/000.git-alias.sh
+
+unset DIR
