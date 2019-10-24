@@ -1,2 +1,9 @@
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+_path=$HOME/.rvm/bin
+
+if [[ -d "$_path" ]]; then
+    if [[ ":$PATH" != *":$_path:"* ]]; then
+        export PATH="$PATH:$_path"
+    fi
+fi
+
+unset _path
