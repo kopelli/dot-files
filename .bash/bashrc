@@ -18,8 +18,7 @@ source $DIR/000.cmd-alias.sh
 
 source $DIR/000.cp.sh
 
-# Always create the full path to a folder
-alias mkdir='mkdir -pv'
+source $DIR/000.mkdir.sh
 
 source $DIR/000.share-history.sh
 
