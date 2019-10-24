@@ -14,8 +14,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 source $DIR/000.ls-default.sh
 
-alias cls='reset'
-alias quit='exit'
+source $DIR/000.cmd-alias.sh
 
 # Always copy recursively and with verbosity
 alias cp='cp -rv'
