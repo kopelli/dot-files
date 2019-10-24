@@ -4,18 +4,15 @@
 [ -z "$PS1" ] && return
 
 platform='unknown'
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do #resolve $SOURCE until it is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-# Modifying this from https://stackoverflow.com/a/1688464
-if ls --color -d . >/dev/null 2>&1; then
-  LS_SUPPORT=gnu
-  alias ls='ls -l -A -p -G -v --color'
-elif ls -G -d . >/dev/null 2>&1; then
-  LS_SUPPORT=bsd
-  alias ls='ls -l -A -p -G -v'
-else
-  LS_SUPPORT=solaris
-  alias ls='ls -l -A'
-fi
+source $DIR/000.ls-default.sh
 
 alias cls='reset'
 alias quit='exit'
