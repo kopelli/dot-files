@@ -1,0 +1,23 @@
+# For more things to flush this out, check out http://tldp.org/LDP/abs/html/sample-bashrc.html
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# Need to find where this file is being run from
+# Since it will be symlinked, need to trace down the *actual* location.
+# See https://stackoverflow.com/a/246128/6504 for more explaination.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do #resolve $SOURCE until it is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+unset SOURCE
+
+# Borrowing this idea from https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
+for FILE in $DIR/*.sh ; do
+  source "$FILE"
+done
+
+unset DIR
