@@ -26,4 +26,35 @@ for FILE in $DIR/*.sh ; do
   source "$FILE"
 done
 
+# Now let's override individual commands
+# this is borrowed from https://gist.io/@tsutsu/2c11fc0a36000a46566e9fd62c60dea4#bash-hooks
+for HOOK_SCRIPT in "$DIR/hooks/"*; do
+  if [ ! -x "${HOOK_SCRIPT}" ]; then
+    continue
+  fi
+
+  REQS=($(basename "${HOOK_SCRIPT}" | tr '+' "\n"))
+  SATISFIED_REQS=()
+  for REQ in "${REQS[@]}"; do
+    if hash "${REQ}" 2>/dev/null; then
+      # Essentially, if the shell can determine the hash of the command, it exists
+      # More universal than 'which' since it can determine shell functions
+      SATISFIED_REQS=(${SATISFIED_REQS[@]} ${REQ})
+    fi
+  done
+
+  if [ "${#REQS[@]}" -eq "${#SATISFIED_REQS[@]}" ]; then
+    # if the count of REQS equals SATISFIED_REQS, then we should run the script
+    source "${HOOK_SCRIPT}"
+  else
+    UNSATISFIED_REQS=($(comm -13 <(printf '%s\n' "${SATISFIED_REQS[@]}" | LC_ALL=C sort) <(printf '%s\n' "${REQS[@]}" | LC_ALL=C sort)))
+    # Uncomment the following line to debug why a hook isn't being imported
+    #echo "Cannot import '${HOOK_SCRIPT}'; Could not satisfy the requirement(s): ${UNSATISFIED_REQS[@]}"
+    unset UNSATISFIED_REQS
+  fi
+
+  unset REQS
+  unset SATISFIED_REQS
+done
+
 unset DIR
