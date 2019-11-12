@@ -54,7 +54,7 @@ ln -s ${install_dir}/_tmux.conf ~/.tmux.conf
 
 echo "Installing vim..."
 rm -rf ~/.vimrc
-ln -s ${install_dir}/_vimrc ~/.vimrc
+ln -s ${install_dir}/.vim/_vimrc ~/.vimrc
 
 echo "Installing vim plugins..."
 </dev/tty vim +PlugInstall +qall
