@@ -175,8 +175,8 @@ set laststatus=2
 " => Bundles
 """"""""""""""""""""""""""""""""""""""""
 let g:NERDTreeCopyCmd= 'cp -r'
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/bundle')
+set rtp+=~/.vim/installed/Vundle.vim
+call vundle#begin('~/.vim/installed')
 
 " Let Vundle manage Vundle
 " required!
