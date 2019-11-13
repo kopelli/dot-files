@@ -97,16 +97,6 @@ set encoding=utf8
 set ffs=dos,unix,mac
 
 """"""""""""""""""""""""""""""""""""""""
-" => File type detection
-""""""""""""""""""""""""""""""""""""""""
-" MSBuild targets
-au BufNewFile,BufRead *.targets set filetype=xml
-
-" Powershell
-au BufNewFile,BufRead *.ps1 set filetype=ps1
-au BufNewFile,BufRead *.psm1 set filetype=ps1
-
-""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """"""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
