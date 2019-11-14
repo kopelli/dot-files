@@ -3,7 +3,15 @@
 " Disallow use of :autocmd, shell, and write commands
 set secure
 set nocompatible
-filetype off
+
+""""""""""""""""""""""""""""""""""""""""
+" => Automatically Install vim-plug
+""""""""""""""""""""""""""""""""""""""""
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 """"""""""""""""""""""""""""""""""""""""
 " => General
@@ -133,44 +141,30 @@ set laststatus=2
 " => Bundles
 """"""""""""""""""""""""""""""""""""""""
 let g:NERDTreeCopyCmd= 'cp -r'
-set rtp+=~/.vim/installed/Vundle.vim
-call vundle#begin('~/.vim/installed')
 
-" Let Vundle manage Vundle
-" required!
-Plugin 'VundleVim/Vundle.vim'
-
-" My bundles here:
-Plugin 'PProvost/vim-ps1'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'christoomey/vim-tmux-navigator'
-"Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'fxn/vim-monochrome'
-"Plugin 'garbas/vim-snipmate'
-"Plugin 'groenewege/vim-less'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'leafgarland/typescript-vim'
-"Plugin 'majutsushi/tagbar'
-"Plugin 'pangloss/vim-javascript'
-"Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'theWildSushii/SweetCandy.vim'
-"Plugin 'tpope/sensible'
-"Plugin 'venusjs/venus.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-scripts/The-Vim-Gardener'
-"Plugin 'vim-scripts/auto_autoread.vim'
-"Plugin 'vim-syntastic/syntastic'
-"Plugin 'xolox/vim-easytags'
-"Plugin 'xolox/vim-misc'
-
-
-" vim-scripts repos
-
-" non-Github repos
-
-" Git repos from local system/network
-call vundle#end()           " required
-filetype plugin indent on   " required
+call plug#begin('~/.vim/installed')
+Plug 'PProvost/vim-ps1'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'christoomey/vim-tmux-navigator'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'fxn/vim-monochrome'
+"Plug 'garbas/vim-snipmate'
+"Plug 'groenewege/vim-less'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'leafgarland/typescript-vim'
+"Plug 'majutsushi/tagbar'
+"Plug 'pangloss/vim-javascript'
+"Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'theWildSushii/SweetCandy.vim'
+"Plug 'tpope/sensible'
+"Plug 'venusjs/venus.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-scripts/The-Vim-Gardener'
+"Plug 'vim-scripts/auto_autoread.vim'
+"Plug 'vim-syntastic/syntastic'
+"Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-misc'
+call plug#end()
