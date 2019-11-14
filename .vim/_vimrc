@@ -121,13 +121,6 @@ let g:rbpt_colorpairs = [
     \ ['red',         'firebrick3'],
     \ ]
 
-" Rainbow Parentheses
-autocmd VimEnter * RainbowParenthesesToggleAll
-autocmd Syntax *   RainbowParenthesesLoadRound
-autocmd Syntax *   RainbowParenthesesLoadSquare
-autocmd Syntax *   RainbowParenthesesLoadBraces
-autocmd Syntax *   RainbowParenthesesLoadChevrons
-
 """"""""""""""""""""""""""""""""""""""""
 " => Status Line
 """"""""""""""""""""""""""""""""""""""""
