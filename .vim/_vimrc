@@ -25,31 +25,6 @@ inoremap ;; <ESC>
 command! CDC cd %:p:h
 
 """"""""""""""""""""""""""""""""""""""""
-" => Handling large files
-""""""""""""""""""""""""""""""""""""""""
-" file is larger than 50Mb
-let g:LargeFileSize = 1024 * 1024 * 50
-augroup LargeFile
-    autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFileSize || f == -2 | call PrepareForLargeFile() | endif
-augroup END
-
-if !exists("*PrepareForLargeFile")
-    function PrepareForLargeFile()
-        " no syntax highlighting
-        set eventignore+=FileType
-
-        " save memory when other file is viewed
-        setlocal bufhidden=unload
-
-        " no undo possible
-        setlocal undolevels=-1
-
-        " display message
-        autocmd VimEnter *  echo "The file is larger than " . (g:LargeFileSize / 1024 / 1024) . " MB, so some options are changed (see ~/.vimrc for details)."
-    endfunction
-endif
-
-""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """"""""""""""""""""""""""""""""""""""""
 " Always show current position
@@ -115,13 +90,6 @@ set ai
 set si
 " don't wrap lines
 set nowrap
-
-" Automatically remove trailing whitespace from lines
-" prior to saving the file
-autocmd BufWritePre *.html :%s/\s\+$//e
-autocmd BufWritePre *.less :%s/\s\+$//e
-autocmd BufWritePre *.js :%s/\s\+$//e
-autocmd BufWritePre *.java :%s/\s\+$//e
 
 " Auto-source this file when we write it
 autocmd! BufWritePost .vimrc source %
