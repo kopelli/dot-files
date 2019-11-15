@@ -3,7 +3,15 @@
 " Disallow use of :autocmd, shell, and write commands
 set secure
 set nocompatible
-filetype off
+
+""""""""""""""""""""""""""""""""""""""""
+" => Automatically Install vim-plug
+""""""""""""""""""""""""""""""""""""""""
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
 """"""""""""""""""""""""""""""""""""""""
 " => General
@@ -23,31 +31,6 @@ inoremap ;; <ESC>
 " :CDC = Change to Directory of Current file
 "   NOTE: the ! means "overwrite the existing command
 command! CDC cd %:p:h
-
-""""""""""""""""""""""""""""""""""""""""
-" => Handling large files
-""""""""""""""""""""""""""""""""""""""""
-" file is larger than 50Mb
-let g:LargeFileSize = 1024 * 1024 * 50
-augroup LargeFile
-    autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFileSize || f == -2 | call PrepareForLargeFile() | endif
-augroup END
-
-if !exists("*PrepareForLargeFile")
-    function PrepareForLargeFile()
-        " no syntax highlighting
-        set eventignore+=FileType
-
-        " save memory when other file is viewed
-        setlocal bufhidden=unload
-
-        " no undo possible
-        setlocal undolevels=-1
-
-        " display message
-        autocmd VimEnter *  echo "The file is larger than " . (g:LargeFileSize / 1024 / 1024) . " MB, so some options are changed (see ~/.vimrc for details)."
-    endfunction
-endif
 
 """"""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -97,16 +80,6 @@ set encoding=utf8
 set ffs=dos,unix,mac
 
 """"""""""""""""""""""""""""""""""""""""
-" => File type detection
-""""""""""""""""""""""""""""""""""""""""
-" MSBuild targets
-au BufNewFile,BufRead *.targets set filetype=xml
-
-" Powershell
-au BufNewFile,BufRead *.ps1 set filetype=ps1
-au BufNewFile,BufRead *.psm1 set filetype=ps1
-
-""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """"""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
@@ -125,13 +98,6 @@ set ai
 set si
 " don't wrap lines
 set nowrap
-
-" Automatically remove trailing whitespace from lines
-" prior to saving the file
-autocmd BufWritePre *.html :%s/\s\+$//e
-autocmd BufWritePre *.less :%s/\s\+$//e
-autocmd BufWritePre *.js :%s/\s\+$//e
-autocmd BufWritePre *.java :%s/\s\+$//e
 
 " Auto-source this file when we write it
 autocmd! BufWritePost .vimrc source %
@@ -155,13 +121,6 @@ let g:rbpt_colorpairs = [
     \ ['red',         'firebrick3'],
     \ ]
 
-" Rainbow Parentheses
-autocmd VimEnter * RainbowParenthesesToggleAll
-autocmd Syntax *   RainbowParenthesesLoadRound
-autocmd Syntax *   RainbowParenthesesLoadSquare
-autocmd Syntax *   RainbowParenthesesLoadBraces
-autocmd Syntax *   RainbowParenthesesLoadChevrons
-
 """"""""""""""""""""""""""""""""""""""""
 " => Status Line
 """"""""""""""""""""""""""""""""""""""""
@@ -175,44 +134,30 @@ set laststatus=2
 " => Bundles
 """"""""""""""""""""""""""""""""""""""""
 let g:NERDTreeCopyCmd= 'cp -r'
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin('~/.vim/bundle')
 
-" Let Vundle manage Vundle
-" required!
-Plugin 'VundleVim/Vundle.vim'
-
-" My bundles here:
-Plugin 'PProvost/vim-ps1'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'christoomey/vim-tmux-navigator'
-"Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'fxn/vim-monochrome'
-"Plugin 'garbas/vim-snipmate'
-"Plugin 'groenewege/vim-less'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'leafgarland/typescript-vim'
-"Plugin 'majutsushi/tagbar'
-"Plugin 'pangloss/vim-javascript'
-"Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'theWildSushii/SweetCandy.vim'
-"Plugin 'tpope/sensible'
-"Plugin 'venusjs/venus.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-scripts/The-Vim-Gardener'
-"Plugin 'vim-scripts/auto_autoread.vim'
-"Plugin 'vim-syntastic/syntastic'
-"Plugin 'xolox/vim-easytags'
-"Plugin 'xolox/vim-misc'
-
-
-" vim-scripts repos
-
-" non-Github repos
-
-" Git repos from local system/network
-call vundle#end()           " required
-filetype plugin indent on   " required
+call plug#begin('~/.vim/installed')
+Plug 'PProvost/vim-ps1'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'christoomey/vim-tmux-navigator'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'fxn/vim-monochrome'
+"Plug 'garbas/vim-snipmate'
+"Plug 'groenewege/vim-less'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'leafgarland/typescript-vim'
+"Plug 'majutsushi/tagbar'
+"Plug 'pangloss/vim-javascript'
+"Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'theWildSushii/SweetCandy.vim'
+"Plug 'tpope/sensible'
+"Plug 'venusjs/venus.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-scripts/The-Vim-Gardener'
+"Plug 'vim-scripts/auto_autoread.vim'
+"Plug 'vim-syntastic/syntastic'
+"Plug 'xolox/vim-easytags'
+"Plug 'xolox/vim-misc'
+call plug#end()
