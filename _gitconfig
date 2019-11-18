@@ -1,9 +1,6 @@
 [user]
 	email = kopelli@gmail.com
 	name = Steven Evans
-[core]
-	safecrlf = false
-	pager = cat
 [alias]
   aliases = config --get-regexp alias
   am = commit --amend --reset-author
@@ -28,18 +25,18 @@
   typo = commit -am "Fix typo"
   undo = reset --soft HEAD^
 	unstage = reset HEAD --
-[push]
-	default = simple
-  followTags = true
 [include]
+  path = ~/.git-config/default/core
+  path = ~/.git-config/default/commit
+  path = ~/.git-config/default/help
+  path = ~/.git-config/default/push
+  path = ~/.git-config/default/rebase
 	path = ~/.git-config/local-settings
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
-[commit]
-  template = ~/.git-config/commit-template.txt
 [difftool]
   prompt = true
 [difftool "bc3"]
@@ -48,7 +45,3 @@
 	cmd = "/Applications/Beyond Compare.app/Contents/MacOS/bcomp" \"$LOCAL\" \"$REMOTE\"
 [mergetool "bcomp"]
 	cmd = "/Applications/Beyond Compare.app/Contents/MacOS/bcomp" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
-[help]
-  autoCorrect = 1
-[rebase]
-  autoStash = true

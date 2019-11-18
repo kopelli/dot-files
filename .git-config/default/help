@@ -1,0 +1,4 @@
+[help]
+  autoCorrect = 1
+  format = man
+  htmlPath = https://git-scm.com/docs/

@@ -1,0 +1,2 @@
+[commit]
+  template = ~/.git-config/commit-template.txt

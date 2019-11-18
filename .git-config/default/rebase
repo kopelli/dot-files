@@ -1,0 +1,6 @@
+[rebase]
+  abbreviateCommits = false
+  autoSquash = false
+  autoStash = true
+  missingCommitsCheck = error
+

@@ -1,0 +1,6 @@
+[core]
+  commentChar = "#"
+  editor = vi
+  safecrlf = false
+  pager = cat
+  whitespace = blank-at-eol, space-before-tab, tab-in-indent, tabwidth=2
