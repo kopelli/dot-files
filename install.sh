@@ -46,7 +46,7 @@ echo "Installing git..."
 rm -rf ~/.gitconfig
 rm -rf ~/.git-commit-template
 ln -s ${install_dir}/_gitconfig ~/.gitconfig
-ln -s ${install_dir}/_git-commit-template ~/.git-commit-template
+ln -s ${install_dir}/.git-config ~/.git-config
 
 echo "Installing tmux..."
 rm -rf ~/.tmux.conf

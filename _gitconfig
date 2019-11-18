@@ -39,7 +39,7 @@
   process = git-lfs filter-process
   required = true
 [commit]
-  template = .git-commit-template 
+  template = ~/.git-config/commit-template.txt
 [difftool]
   prompt = true
 [difftool "bc3"]
