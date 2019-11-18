@@ -32,7 +32,7 @@
 	default = simple
   followTags = true
 [include]
-	path = .gitconfig-local
+	path = ~/.git-config/local-settings
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
