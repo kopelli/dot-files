@@ -31,12 +31,8 @@
   path = ~/.git-config/default/help
   path = ~/.git-config/default/push
   path = ~/.git-config/default/rebase
+  path = ~/.git-config/filter/lfs
 	path = ~/.git-config/local-settings
-[filter "lfs"]
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
-  process = git-lfs filter-process
-  required = true
 [difftool]
   prompt = true
 [difftool "bc3"]
