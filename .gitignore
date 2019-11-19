@@ -1,3 +1,4 @@
 *.swp
 .vim/installed
 .vim/autoload/plug.vim
+.git-config/local-settings

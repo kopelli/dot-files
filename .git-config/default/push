@@ -1,0 +1,5 @@
+[push]
+  default = simple
+  followTags = true
+  gpgSign = if-asked
+  recurseSubmodules = check
