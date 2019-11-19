@@ -44,7 +44,7 @@ ln -s ${install_dir}/.bash/bashrc ~/.bashrc
 
 echo "Installing git..."
 rm -rf ~/.gitconfig
-rm -rf ~/.git-commit-template
+rm -f ~/.git-config
 ln -s ${install_dir}/_gitconfig ~/.gitconfig
 ln -s ${install_dir}/.git-config ~/.git-config
 
