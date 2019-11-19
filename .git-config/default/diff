@@ -1,0 +1,6 @@
+[diff]
+  tool = vimdiff2
+  guitool = vimdiff2
+[difftool]
+  prompt = true
+  trustExitCode = true
