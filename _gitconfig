@@ -1,36 +1,13 @@
 [user]
 	email = kopelli@gmail.com
 	name = Steven Evans
-[alias]
-  aliases = config --get-regexp alias
-  am = commit --amend --reset-author
-  amend = commit --amend
-  amendit = commit --amend --no-edit
-  bump = commit -am "Bump version number"
-  ch = checkout
-  co = checkout
-  committers = shortlog -s -n
-  fuckit = reset --hard HEAD
-	glog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
-  graph = log --graph --oneline --decorate --all --full-history --author-date-order --no-notes
-  graphit = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  ignore="!sh -c \" echo $1>>.gitignore\" -"
-  minor = commit -am "Make minor changes"
-	please = push --force-with-lease
-  polish = commit -am "Polish"
-	root = rev-parse --show-toplevel
-  s = status --short --branch
-	st = status --short --branch
-  this = !git init && git add . && git commit -m \"initial commit\" --allow-empty
-  typo = commit -am "Fix typo"
-  undo = reset --soft HEAD^
-	unstage = reset HEAD --
 [include]
   path = ~/.git-config/default/core
   path = ~/.git-config/default/commit
   path = ~/.git-config/default/help
   path = ~/.git-config/default/push
   path = ~/.git-config/default/rebase
+  path = ~/.git-config/alias
   path = ~/.git-config/filter/lfs
 	path = ~/.git-config/local-settings
 [difftool]
