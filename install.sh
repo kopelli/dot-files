@@ -39,24 +39,18 @@ fi
 echo "Installing to ${install_dir}"
 
 echo "Installing bash..."
-rm -rf ~/.bashrc
-ln -s ${install_dir}/.bash/bashrc ~/.bashrc
+ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
 
 echo "Installing git..."
-rm -rf ~/.gitconfig
-rm -f ~/.git-config
-ln -s ${install_dir}/_gitconfig ~/.gitconfig
-ln -s ${install_dir}/.git-config ~/.git-config
+ln -fs ${install_dir}/_gitconfig ~/.gitconfig
+ln -fs ${install_dir}/.git-config/ ~/
 
 echo "Installing tmux..."
-rm -rf ~/.tmux.conf
-ln -s ${install_dir}/_tmux.conf ~/.tmux.conf
+ln -fs ${install_dir}/_tmux.conf ~/.tmux.conf
 
 echo "Installing vim..."
-rm -rf ~/.vimrc
-rm -rf ~/.vim
-ln -s ${install_dir}/.vim/_vimrc ~/.vimrc
-ln -s ${install_dir}/.vim ~/.vim
+ln -fs ${install_dir}/.vim/_vimrc ~/.vimrc
+ln -fs ${install_dir}/.vim/ ~/
 
 echo "Installing vim plugins..."
 </dev/tty vim +PlugInstall +qall
