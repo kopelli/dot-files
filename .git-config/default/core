@@ -1,5 +1,6 @@
 [core]
   commentChar = "#"
+  commitGraph = true
   editor = vi
   safecrlf = false
   pager = cat
