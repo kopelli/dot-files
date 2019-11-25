@@ -1,4 +1,0 @@
-[core]
-	autocrlf = input
-    editor = /usr/bin/vim
-    excludesfile = .gitignore_global
