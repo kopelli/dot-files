@@ -77,7 +77,7 @@ do
       ;;
     "\"${_option_git[0]}\"")
       echo "Installing git..."
-      ln -fs ${install_dir}/_gitconfig ~/.gitconfig
+      ln -fs ${install_dir}/.git-config/config ~/.gitconfig
       ln -fs ${install_dir}/.git-config/ ~/
       ;;
     "\"${_option_tmux[0]}\"")
