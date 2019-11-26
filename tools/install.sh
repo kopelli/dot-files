@@ -56,21 +56,18 @@ install_git() {
     if [[ -d "$DIR/git" ]]; then
       for FILE in $("ls" -1 "$DIR/git/"*.clone) ; do
         local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/$(basename "$FILE" .clone)
-        pushd .
         if [[ ! -d "$CLONE_PATH" ]]; then
           echo "Need to make the git clone directory $CLONE_PATH"
           mkdir -p "$CLONE_PATH"
-          cd "$CLONE_PATH"
-          git init -q
-          git config remote.origin.url "$("cat" $FILE)"
-          git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-          git config core.autocrlf "false"
+          git -C "$CLONE_PATH" init -q
+          git -C "$CLONE_PATH" config remote.origin.url "$("cat" $FILE)"
+          git -C "$CLONE_PATH" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+          git -C "$CLONE_PATH" config core.autocrlf "false"
         fi
         echo "git fetch origin master:origin/master --tags --force"
-        git fetch origin master:origin/master --tags --force
-        git reset --hard "origin/master"
+        git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
+        git -C "$CLONE_PATH" reset --hard "origin/master"
         bash "$DIR/git/$(basename "$FILE" .clone).install.sh"
-        popd
       done
     fi
   else
