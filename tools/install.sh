@@ -80,8 +80,14 @@ install_brew() {
     echo "Need to brew install some packages..."
     if [[ -d "$DIR/brew" ]]; then
       for TAP in $("ls" -1 "$DIR/brew/"*.tap) ; do
-        echo "brew tap $("cat" $TAP)"
-        brew tap $("cat" $TAP)
+        local TAP_REPO=$("cat" $TAP)
+        TAP_REPO="${TAP_REPO/$'\r'/}"
+        if [[ "$(brew tap | grep ${TAP_REPO})" == "" ]]; then
+          echo "brew tap $TAP_REPO"
+          brew tap $TAP_REPO
+        #else
+        #  echo "Already tapped $TAP_REPO"
+        fi
       done
 
       local BOTTLES=''
