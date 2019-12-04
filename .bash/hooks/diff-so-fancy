@@ -1,0 +1,25 @@
+LOCAL_GIT_CONFIG=~/.git-config/local-settings
+if [ ! -f "$LOCAL_GIT_CONFIG" ]; then
+  touch "$LOCAL_GIT_CONFIG"
+fi
+
+git config --file "$LOCAL_GIT_CONFIG" core.pager "diff-so-fancy | less --tabs=2 -RFX"
+git config --file "$LOCAL_GIT_CONFIG" color.ui true
+git config --file "$LOCAL_GIT_CONFIG" color.diff-highlight.oldNormal    "red bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff-highlight.oldHighlight "red bold 52"
+git config --file "$LOCAL_GIT_CONFIG" color.diff-highlight.newNormal    "green bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff-highlight.newHighlight "green bold 22"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.meta       "11"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.frag       "magenta bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.commit     "yellow bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.old        "red bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.new        "green bold"
+git config --file "$LOCAL_GIT_CONFIG" color.diff.whitespace "red reverse"
+
+# Ensure default diff-so-fancy settings
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.markEmptyLines true
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.changeHunkIndicators true
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.stripLeadingSymbols false
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.useUnicodeRuler true
+
+unset LOCAL_GIT_CONFIG
