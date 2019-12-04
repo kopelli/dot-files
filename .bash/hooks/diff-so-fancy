@@ -1,0 +1,15 @@
+LOCAL_GIT_CONFIG=~/.git-config/local-settings
+if [ ! -f "$LOCAL_GIT_CONFIG" ]; then
+  touch "$LOCAL_GIT_CONFIG"
+fi
+
+git config --file "$LOCAL_GIT_CONFIG" core.pager "diff-so-fancy | less --tabs=2 -RFX"
+git config --file "$LOCAL_GIT_CONFIG" color.ui true
+
+# Ensure default diff-so-fancy settings
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.markEmptyLines true
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.changeHunkIndicators true
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.stripLeadingSymbols false
+git config --bool --file "$LOCAL_GIT_CONFIG" diff-so-fancy.useUnicodeRuler true
+
+unset LOCAL_GIT_CONFIG
