@@ -55,3 +55,7 @@ set show-all-if-unmodified on
 set skip-completed-text on
 
 set visible-stats on
+
+# Allow for Control-E;Control-E in command mode to expand the aliases
+#   inspired by https://superuser.com/questions/247770/how-to-expand-aliases-inline-in-bash
+"\C-e\C-e": alias-expand-line
