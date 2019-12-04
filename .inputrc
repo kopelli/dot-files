@@ -1,0 +1,57 @@
+# Start with system-wide configuration
+$include /etc/inputrc
+
+# Make sure to use the one true editing mode
+set editing-mode vi
+set keymap vi-command
+
+# Have to be able to tell which mode we're in
+set show-mode-in-prompt on
+
+# Change the cursor type and the "mode" prompt
+# See the following for more information:
+#  * https://superuser.com/a/607479/13767
+#  * https://stackoverflow.com/a/42107711/6504
+#  * https://superuser.com/q/1466222/13767
+#  * https://stackoverflow.com/a/48449104/6504
+set vi-ins-mode-string "\1\e[5 q+\2"
+set vi-cmd-mode-string "\1\e[1 q:\2"
+
+# Turn on color coding of auto-completions
+set colored-completion-prefix on
+set colored-stats on
+
+# We want to hear the bell
+set bell-style audible
+
+# Attempt to show mismatched parens/brackets/braces
+set blink-matching-paren on
+
+# Stop being so picky about casing on autocomplete...
+set completion-ignore-case on
+set completion-map-case on
+
+# How many characters in a completion match to replace with ...
+set completion-prefix-display-length 6
+
+# Limit how many auto-completion options get listed automatically vs. asking
+set completion-query-items 25
+
+set expand-tilde on
+
+set history-preserve-point on
+set history-size 100
+
+# Ensure that commands wrap to another line rather than scrolling
+set horizontal-scroll-mode off
+
+# Ensure directories are appended with a slash on autocomplete
+set mark-directories on
+set mark-symlinked-directories on
+
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+
+set skip-completed-text on
+
+set visible-stats on
