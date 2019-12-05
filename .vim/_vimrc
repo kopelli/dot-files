@@ -77,7 +77,7 @@ syntax enable
 set encoding=utf8
 
 " Use Windows as the standard file type
-set ffs=dos,unix,mac
+set ffs=unix,dos
 
 """"""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
