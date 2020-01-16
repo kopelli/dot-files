@@ -60,7 +60,9 @@ else
     echo "Where do you want to download the repo to?"
     echo "The 'dot-files' directory will be created automatically"
     read -p "($(pwd)): " install_dir </dev/tty
-    install_dir=${install_dir:-$(pwd)}
+    install_dir=${install_dir:-$(pwd)}/dot-files
+    git clone --depth 1 --no-tags --origin "upstream" https://github.com/kopelli/dot-files "${install_dir}"
+    git -C "${install_dir}" remote set-url --push "upstream" "DISALLOWED"
 fi
 
 # IF in git, then loop through remotes and see if it's our expected dot-files
