@@ -14,6 +14,44 @@ _option_gitrepo=('gitrepos' "Direct Git repos" ON)
 _option_brew=('brew' "Homebrew/Linuxbrew" ON)
 _optionCount=8 # This should be how many `_option...` variables are above
 
+# Color output reminder...
+# Need to use `echo -e "..."`
+# Escape sequence is `\e[{CODE;}COLORm`
+#
+# Color         | FG | BG
+# -----         | -- | --
+# Black         | 30 | 40
+# Red           | 31 | 41
+# Green         | 32 | 42
+# Yellow        | 33 | 43
+# Blue          | 34 | 44
+# Magenta       | 35 | 45
+# Cyan          | 36 | 46
+# Light Gray    | 37 | 47
+# Gray          | 90 | 100
+# Light Red     | 91 | 101
+# Light Green   | 92 | 102
+# Light Yellow  | 93 | 103
+# Light Blue    | 94 | 104
+# Light Magenta | 95 | 105
+# Light Cyan    | 96 | 106
+# White         | 97 | 107
+#
+# Code | Description
+# ---- | -----------
+#  0   | Reset/Normal
+#  1   | Bold text
+#  2   | Faint text
+#  3   | Italics
+#  4   | Underlined text
+_color_BLUE="\e[34m"
+_color_GRAY="\e[90m"
+_color_GREEN="\e[32m"
+_color_MAGENTA="\e[35m"
+_color_RED="\e[31m"
+_color_RESET="\e[0m"
+_color_YELLOW="\e[33m"
+
 #==============================================================================
 # Functions
 #==============================================================================
@@ -27,6 +65,7 @@ function install_apt_installers() {
       SUDO='sudo'
     fi
 
+    echo -e "${_color_GRAY}Updating apt...${_color_RESET}"
     $SUDO apt-get -qq update
     if [[ -d "${APT_DIR}" ]]; then
       local PACKAGES=''
@@ -35,36 +74,39 @@ function install_apt_installers() {
       done
 
       if [[ "$PACKAGES" != "" ]]; then
-        echo "$SUDO apt-get -q install $PACKAGES..."
+        echo -e "${_color_GRAY}>>$SUDO apt-get -q install ${_color_BLUE}${PACKAGES}${_color_GRAY}...${_color_RESET}"
         $SUDO apt-get -q install $PACKAGES
+        echo "          ...DONE!"
       fi
+    else
+      echo -e "${_color_RED}Expected directory could not be found${_color_RESET}"
     fi
   else
-    echo "Apt is not installed, skipping..."
+    echo -e "${_color_RED}Apt is not installed, skipping...${_color_RESET}"
   fi
 }
 
 function install_bash() {
-  echo "Installing bashrc..."
+  echo -e "Installing ${_color_MAGENTA}bashrc${_color_RESET}..."
   ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
 }
 
 function install_bash_installers() {
   local SH_DIR="${install_dir}/tools/sh"
   if [[ -d "${SH_DIR}" ]]; then
-    echo "Executing shell script installers..."
+    echo -e "${_color_MAGENTA}Executing shell script installers...${_color_RESET}"
     for FILE in $("ls" -1 "${SH_DIR}/"*.sh) ; do
       FILE="./$(realpath --relative-to="${PWD}" "$FILE")"
-      echo "Executing \"$FILE\"..."
+      echo -e "${_color_GRAY}Executing ${_color_RESET}\"${_color_GREEN}${FILE}${_color_RESET}\"${_color_GRAY}...${_color_RESET}"
       bash "$FILE"
     done
   else
-    echo "Cannot execute shell script installers. Expected directory does not exist!"
+    echo -e "${_color_RED}Cannot execute shell script installers. Expected directory does not exist!${_color_RESET}"
   fi
 }
 
 function install_git_config() {
-  echo "Installing git configuration..."
+  echo -e "Installing ${_color_MAGENTA}git configuration${_color_RESET}..."
   ln -fs ${install_dir}/.git-config/config ~/.gitconfig
   ln -fs ${install_dir}/.git-config/ ~/
 }
@@ -73,41 +115,48 @@ function install_git_repositories() {
   XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
   local GIT_REPO_DIR="${install_dir}/tools/git"
   if [[ $(which git) ]]; then
-    echo "Starting to clone git repos..."
+    echo -e "${_color_GRAY}Starting to clone git repos...${_color_RESET}"
     if [[ -d "${GIT_REPO_DIR}" ]]; then
       for FILE in $("ls" -1 "${GIT_REPO_DIR}/"*.clone) ; do
-        local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/$(basename "$FILE" .clone)
+        local REPO_FILE_NAME="$(basename "$FILE" .clone)"
+        local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/${REPO_FILE_NAME}
         if [[ ! -d "$CLONE_PATH" ]]; then
-          echo "Need to make the git clone directory $CLONE_PATH"
+          echo -e "${_color_YELLOW}Need to make the git clone directory \"${_color_GREEN}$CLONE_PATH${_color_YELLOW}\"${_color_RESET}"
           mkdir -p "$CLONE_PATH"
           git -C "$CLONE_PATH" init -q
           git -C "$CLONE_PATH" config remote.origin.url "$("cat" $FILE)"
           git -C "$CLONE_PATH" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
           git -C "$CLONE_PATH" config core.autocrlf "false"
+        else
+          echo -e "${_color_YELLOW}Updating \"${_color_BLUE}${REPO_FILE_NAME}${_color_YELLOW}\"${_color_RESET}"
         fi
 
-        echo "git fetch origin master:origin/master --tags --force"
+        echo -e "${_color_GRAY}>>git -C \"${_color_GREEN}${CLONE_PATH}${_color_GRAY}\" fetch origin master:origin/master --tags --force${_color_RESET}"
         git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
         git -C "$CLONE_PATH" reset --hard "origin/master"
-        bash "${GIT_REPO_DIR}/$(basename "$FILE" .clone).install.sh"
+
+        echo -e "${_color_GRAY}>>${GIT_REPO_DIR}/${REPO_FILE_NAME}.install.sh${_color_RESET}"
+        bash "${GIT_REPO_DIR}/${REPO_FILE_NAME}.install.sh"
+        echo "          ...DONE"
       done
     fi
   else
-    echo "Git is not available, skipping..."
+    echo -e "${_color_RED}Git is not available, skipping...${_color_RESET}"
   fi
 }
 
 function install_homebrew_installers() {
   local BREW_DIR="${install_dir}/tools/brew"
   if [[ $(which brew) ]]; then
-    echo "Starting to brew install some packages..."
+    echo -e "${_color_GRAY}Starting to brew install some packages...${_color_RESET}"
     if [[ -d "${BREW_DIR}" ]]; then
       for TAP in $("ls" -1 "${BREW_DIR}/"*.tap) ; do
         local TAP_REPO=$("cat" $TAP)
         TAP_REPO="${TAP_REPO/$'\r'/}"
         if [[ "$(brew tap | grep ${TAP_REPO})" == "" ]]; then
-          echo "brew tap $TAP_REPO"
+          echo -e "${_color_GRAY}>>brew tap ${_color_BLUE}$TAP_REPO${_color_RESET}"
           brew tap $TAP_REPO
+          echo "          ...DONE"
         fi
       done
 
@@ -116,8 +165,9 @@ function install_homebrew_installers() {
         BOTTLES="$BOTTLES $(basename "$FILE" .brew)"
       done
       if [[ "$BOTTLES" != "" ]]; then
-        echo "brew install $BOTTLES..."
+        echo -e "${_color_GRAY}>>brew install ${_color_BLUE}$BOTTLES${_color_GRAY}...${_color_RESET}"
         brew install $BOTTLES
+        echo "          ...DONE"
       fi
 
       # Casks are MacOS only...
@@ -127,27 +177,28 @@ function install_homebrew_installers() {
           CASKS="$CASKS $(basename $"FILE" .cask)"
         done
         if [[ "$CASKS" != "" ]]; then
-          echo "brew cask install $CASKS..."
+          echo -e "${_color_GRAY}>>brew cask install ${_color_BLUE}$CASKS${_color_GRAY}...${_color_RESET}"
           brew cask install $CASKS
+          echo "          ...DONE"
         fi
       fi
     fi
   else
-    echo "Brew is not installed, skipping..."
+    echo -e "${_color_RED}Brew is not installed, skipping...${_color_RESET}"
   fi
 }
 
 function install_tmux_config() {
-  echo "Installing tmux configuration..."
+  echo -e "Installing ${_color_MAGENTA}tmux configuration${_color_RESET}..."
   ln -fs ${install_dir}/_tmux.conf ~/.tmux.conf
 }
 
 function install_vim_config() {
-  echo "Installing vim configuration..."
+  echo -e "Installing ${_color_MAGENTA}vim configuration${_color_RESET}..."
   ln -fs ${install_dir}/.vim/_vimrc ~/.vimrc
   ln -fs ${install_dir}/.vim/ ~/
 
-  echo "Installing vim plugins..."
+  echo -e "Installing ${_color_MAGENTA}vim plugins${_color_RESET}..."
   </dev/tty vim +PlugInstall +qall
 }
 
@@ -174,8 +225,11 @@ case $osname in
     _option_apt[2]=OFF
     ;;
   *)
-    echo "...not sure what to do on \"$osname\"..."
+    echo -e "${_color_RED}...not sure what to do on \"${_color_GREEN}$osname${_color_RED}\"...${_color_RESET}"
 esac
+
+# Reset the color output before performing anything else...
+echo -ne "${_color_RESET}"
 
 #==============================================================================
 # Prompt for install choices
@@ -219,13 +273,13 @@ IS_IN_GIT_REPO=$(is_in_git_repo && echo $TRUE)
 IS_IN_GIT_REPO=${IS_IN_GIT_REPO:-$FALSE}
 
 if [[ "$IS_IN_GIT_REPO" -eq "$TRUE" ]]; then
-    echo "We're in a git repo, so assume this is the install directory"
+    echo -e "${_color_YELLOW}We're in a git repo, so assume this is the install directory${_color_RESET}"
     # TODO: Loop through remotes and make sure one of them matches
     # TODO: Find the root of the git repo
     install_dir="$(pwd)"
 else
-    echo "Where do you want to download the repo to?"
-    echo "The 'dot-files' directory will be created automatically"
+    echo -e "${_color_RED}Where do you want to download the repo to?"
+    echo -e "The 'dot-files' directory will be created automatically${_color_RESET}"
     read -p "($(pwd)): " install_dir </dev/tty
     install_dir=${install_dir:-$(pwd)}/dot-files
     git clone --depth 1 --no-tags --origin "upstream" https://github.com/kopelli/dot-files "${install_dir}"
@@ -236,8 +290,8 @@ fi
 # Perform installs
 #==============================================================================
 
-echo "You are running $osname"
-echo "Install directory is \"${install_dir}\""
+echo -e "${_color_GRAY}You are running ${_color_RESET}\"${_color_GREEN}$osname${_color_RESET}\""
+echo -e "Install directory is \"${_color_GREEN}${install_dir}${_color_RESET}\""
 for option in $toInstall
 do
   case $option in
