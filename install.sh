@@ -18,6 +18,7 @@ _optionCount=8 # This should be how many `_option...` variables are above
 # Functions
 #==============================================================================
 function install_apt_installers() {
+  local APT_DIR="${install_dir}/tools/apt"
   if [[ $(which apt) ]]; then
     # Use this trick to determine if we need to prefix the "sudo" command"
     # Taken from https://stackoverflow.com/a/21622456/6504
@@ -27,9 +28,9 @@ function install_apt_installers() {
     fi
 
     $SUDO apt-get -qq update
-    if [[ -d "${install_dir}/tools/apt" ]]; then
+    if [[ -d "${APT_DIR}" ]]; then
       local PACKAGES=''
-      for FILE in $("ls" -1 "${install_dir}/tools/apt/"*.apt) ; do
+      for FILE in $("ls" -1 "${APT_DIR}/"*.apt) ; do
         PACKAGES="$PACKAGES $(basename "$FILE" .apt)"
       done
 
@@ -49,9 +50,10 @@ function install_bash() {
 }
 
 function install_bash_installers() {
-  if [[ -d "${install_dir}/tools/sh" ]]; then
+  local SH_DIR="${install_dir}/tools/sh"
+  if [[ -d "${SH_DIR}" ]]; then
     echo "Executing shell script installers..."
-    for FILE in $("ls" -1 "$install_dir/tools/sh/"*.sh) ; do
+    for FILE in $("ls" -1 "${SH_DIR}/"*.sh) ; do
       FILE="./$(realpath --relative-to="${PWD}" "$FILE")"
       echo "Executing \"$FILE\"..."
       bash "$FILE"
@@ -69,10 +71,11 @@ function install_git_config() {
 
 function install_git_repositories() {
   XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+  local GIT_REPO_DIR="${install_dir}/tools/git"
   if [[ $(which git) ]]; then
     echo "Starting to clone git repos..."
-    if [[ -d "${install_dir}/tools/git" ]]; then
-      for FILE in $("ls" -1 "${install_dir}/tools/git/"*.clone) ; do
+    if [[ -d "${GIT_REPO_DIR}" ]]; then
+      for FILE in $("ls" -1 "${GIT_REPO_DIR}/"*.clone) ; do
         local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/$(basename "$FILE" .clone)
         if [[ ! -d "$CLONE_PATH" ]]; then
           echo "Need to make the git clone directory $CLONE_PATH"
@@ -86,7 +89,7 @@ function install_git_repositories() {
         echo "git fetch origin master:origin/master --tags --force"
         git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
         git -C "$CLONE_PATH" reset --hard "origin/master"
-        bash "${install_dir}/tools/git/$(basename "$FILE" .clone).install.sh"
+        bash "${GIT_REPO_DIR}/$(basename "$FILE" .clone).install.sh"
       done
     fi
   else
@@ -95,10 +98,11 @@ function install_git_repositories() {
 }
 
 function install_homebrew_installers() {
+  local BREW_DIR="${install_dir}/tools/brew"
   if [[ $(which brew) ]]; then
     echo "Starting to brew install some packages..."
-    if [[ -d "${install_dir}/tools/brew" ]]; then
-      for TAP in $("ls" -1 "${install_dir}/tools/brew/"*.tap) ; do
+    if [[ -d "${BREW_DIR}" ]]; then
+      for TAP in $("ls" -1 "${BREW_DIR}/"*.tap) ; do
         local TAP_REPO=$("cat" $TAP)
         TAP_REPO="${TAP_REPO/$'\r'/}"
         if [[ "$(brew tap | grep ${TAP_REPO})" == "" ]]; then
@@ -108,7 +112,7 @@ function install_homebrew_installers() {
       done
 
       local BOTTLES=''
-      for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.brew) ; do
+      for FILE in $("ls" -1 "${BREW_DIR}/"*.brew) ; do
         BOTTLES="$BOTTLES $(basename "$FILE" .brew)"
       done
       if [[ "$BOTTLES" != "" ]]; then
@@ -119,7 +123,7 @@ function install_homebrew_installers() {
       # Casks are MacOS only...
       if [[ "$osname" == "Darwin" ]]; then
         local CASKS=''
-        for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.cask) ; do
+        for FILE in $("ls" -1 "${BREW_DIR}/"*.cask) ; do
           CASKS="$CASKS $(basename $"FILE" .cask)"
         done
         if [[ "$CASKS" != "" ]]; then
