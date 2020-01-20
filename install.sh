@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#==============================================================================
+# Menu configuration
+#==============================================================================
 _menu_text="Select all that you would like to install\nPress [Enter] to continue installation"
 _option_bash=('BASH' ".bashrc" ON)
 _option_git=('GIT' "Git configuration" ON)
@@ -9,10 +12,17 @@ _option_sh=('sh' "Bash script installers" ON)
 _option_apt=('apt' "APT packages" ON)
 _option_gitrepo=('gitrepos' "Direct Git repos" ON)
 _option_brew=('brew' "Homebrew/Linuxbrew" ON)
-
-
-read _height _width < <(stty size)
 _optionCount=8 # This should be how many `_option...` variables are above
+
+#==============================================================================
+# Functions
+#==============================================================================
+function is_in_git_repo() {
+    git rev-parse 2> /dev/null
+}
+
+# Establish the height of the menu box
+read _height _width < <(stty size)
 _height=$(( $_height < $_optionCount + 10 ? $_height : $_optionCount + 10 )) # set minimum height
 
 # check out https://askubuntu.com/a/781062 for color info
@@ -43,19 +53,19 @@ whiptail \
   "${_option_gitrepo[@]}" \
   "${_option_brew[@]}" 3>&1 1>&2 2>&3)
 
+# Should the user clear all checkboxes, there's nothing else for us to do.
+# So bail early.
 if [[ ${#toInstall} -eq 0 ]]; then
   exit 0
 fi
 
+# While comparing to just integer exit codes _can_ be done,
+# let's opt for readability...
 TRUE=1
 FALSE=0
 
 osname=$(uname -s)
 echo "You are running $osname"
-
-function is_in_git_repo() {
-    git rev-parse 2> /dev/null
-}
 
 IS_IN_GIT_REPO=$(is_in_git_repo && echo $TRUE)
 IS_IN_GIT_REPO=${IS_IN_GIT_REPO:-$FALSE}
@@ -74,9 +84,9 @@ else
     git -C "${install_dir}" remote set-url --push "upstream" "DISALLOWED"
 fi
 
-# IF in git, then loop through remotes and see if it's our expected dot-files
-# otherwise prompt for download
-
+#==============================================================================
+# Perform installs
+#==============================================================================
 
 echo "Install directory is \"${install_dir}\""
 for option in $toInstall
@@ -210,6 +220,9 @@ do
   esac
 done
 
+#==============================================================================
+# Post-install
+#==============================================================================
 if [[ $toInstall =~ "\"${_option_bash[0]}\"" ]]; then
   source ~/.bashrc
 fi
