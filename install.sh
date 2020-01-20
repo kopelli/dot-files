@@ -25,6 +25,27 @@ function is_in_git_repo() {
 read _height _width < <(stty size)
 _height=$(( $_height < $_optionCount + 10 ? $_height : $_optionCount + 10 )) # set minimum height
 
+# While comparing to just integer exit codes _can_ be done,
+# let's opt for readability...
+TRUE=1
+FALSE=0
+
+osname=$(uname -s)
+
+# Some tools just don't make sense on a given OS, so disable them by default
+case $osname in
+  "Linux")
+    ;;
+  "Darwin")
+    _option_apt[2]=OFF
+    ;;
+  *)
+    echo "...not sure what to do on \"$osname\"..."
+esac
+
+#==============================================================================
+# Prompt for install choices
+#==============================================================================
 # check out https://askubuntu.com/a/781062 for color info
 toInstall=$(NEWT_COLORS='
   root=white,black
@@ -59,13 +80,6 @@ if [[ ${#toInstall} -eq 0 ]]; then
   exit 0
 fi
 
-# While comparing to just integer exit codes _can_ be done,
-# let's opt for readability...
-TRUE=1
-FALSE=0
-
-osname=$(uname -s)
-echo "You are running $osname"
 
 IS_IN_GIT_REPO=$(is_in_git_repo && echo $TRUE)
 IS_IN_GIT_REPO=${IS_IN_GIT_REPO:-$FALSE}
@@ -88,6 +102,7 @@ fi
 # Perform installs
 #==============================================================================
 
+echo "You are running $osname"
 echo "Install directory is \"${install_dir}\""
 for option in $toInstall
 do
