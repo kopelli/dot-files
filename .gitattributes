@@ -1,0 +1,12 @@
+*       text=auto
+*.apt   text eol=lf
+*.bat   text eol=crlf
+*.brew  text eol=lf
+*.cask  text eol=lf
+*.clone text eol=lf
+*.conf  text eol=lf
+*.md    text eol=lf
+*.sh    text eol=lf
+*.tap   text eol=lf
+*.txt   text eol=lf
+*.vim   text eol=lf
