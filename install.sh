@@ -17,6 +17,136 @@ _optionCount=8 # This should be how many `_option...` variables are above
 #==============================================================================
 # Functions
 #==============================================================================
+function install_apt_installers() {
+  if [[ $(which apt) ]]; then
+    # Use this trick to determine if we need to prefix the "sudo" command"
+    # Taken from https://stackoverflow.com/a/21622456/6504
+    local SUDO=''
+    if (( $EUID != 0 )); then
+      SUDO='sudo'
+    fi
+
+    $SUDO apt-get -qq update
+    if [[ -d "${install_dir}/tools/apt" ]]; then
+      local PACKAGES=''
+      for FILE in $("ls" -1 "${install_dir}/tools/apt/"*.apt) ; do
+        PACKAGES="$PACKAGES $(basename "$FILE" .apt)"
+      done
+
+      if [[ "$PACKAGES" != "" ]]; then
+        echo "$SUDO apt-get -q install $PACKAGES..."
+        $SUDO apt-get -q install $PACKAGES
+      fi
+    fi
+  else
+    echo "Apt is not installed, skipping..."
+  fi
+}
+
+function install_bash() {
+  echo "Installing bashrc..."
+  ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
+}
+
+function install_bash_installers() {
+  if [[ -d "${install_dir}/tools/sh" ]]; then
+    echo "Executing shell script installers..."
+    for FILE in $("ls" -1 "$install_dir/tools/sh/"*.sh) ; do
+      FILE="./$(realpath --relative-to="${PWD}" "$FILE")"
+      echo "Executing \"$FILE\"..."
+      bash "$FILE"
+    done
+  else
+    echo "Cannot execute shell script installers. Expected directory does not exist!"
+  fi
+}
+
+function install_git_config() {
+  echo "Installing git configuration..."
+  ln -fs ${install_dir}/.git-config/config ~/.gitconfig
+  ln -fs ${install_dir}/.git-config/ ~/
+}
+
+function install_git_repositories() {
+  XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+  if [[ $(which git) ]]; then
+    echo "Starting to clone git repos..."
+    if [[ -d "${install_dir}/tools/git" ]]; then
+      for FILE in $("ls" -1 "${install_dir}/tools/git/"*.clone) ; do
+        local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/$(basename "$FILE" .clone)
+        if [[ ! -d "$CLONE_PATH" ]]; then
+          echo "Need to make the git clone directory $CLONE_PATH"
+          mkdir -p "$CLONE_PATH"
+          git -C "$CLONE_PATH" init -q
+          git -C "$CLONE_PATH" config remote.origin.url "$("cat" $FILE)"
+          git -C "$CLONE_PATH" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+          git -C "$CLONE_PATH" config core.autocrlf "false"
+        fi
+
+        echo "git fetch origin master:origin/master --tags --force"
+        git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
+        git -C "$CLONE_PATH" reset --hard "origin/master"
+        bash "${install_dir}/tools/git/$(basename "$FILE" .clone).install.sh"
+      done
+    fi
+  else
+    echo "Git is not available, skipping..."
+  fi
+}
+
+function install_homebrew_installers() {
+  if [[ $(which brew) ]]; then
+    echo "Starting to brew install some packages..."
+    if [[ -d "${install_dir}/tools/brew" ]]; then
+      for TAP in $("ls" -1 "${install_dir}/tools/brew/"*.tap) ; do
+        local TAP_REPO=$("cat" $TAP)
+        TAP_REPO="${TAP_REPO/$'\r'/}"
+        if [[ "$(brew tap | grep ${TAP_REPO})" == "" ]]; then
+          echo "brew tap $TAP_REPO"
+          brew tap $TAP_REPO
+        fi
+      done
+
+      local BOTTLES=''
+      for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.brew) ; do
+        BOTTLES="$BOTTLES $(basename "$FILE" .brew)"
+      done
+      if [[ "$BOTTLES" != "" ]]; then
+        echo "brew install $BOTTLES..."
+        brew install $BOTTLES
+      fi
+
+      # Casks are MacOS only...
+      if [[ "$osname" == "Darwin" ]]; then
+        local CASKS=''
+        for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.cask) ; do
+          CASKS="$CASKS $(basename $"FILE" .cask)"
+        done
+        if [[ "$CASKS" != "" ]]; then
+          echo "brew cask install $CASKS..."
+          brew cask install $CASKS
+        fi
+      fi
+    fi
+  else
+    echo "Brew is not installed, skipping..."
+  fi
+}
+
+function install_tmux_config() {
+  echo "Installing tmux configuration..."
+  ln -fs ${install_dir}/_tmux.conf ~/.tmux.conf
+}
+
+function install_vim_config() {
+  echo "Installing vim configuration..."
+  ln -fs ${install_dir}/.vim/_vimrc ~/.vimrc
+  ln -fs ${install_dir}/.vim/ ~/
+
+  echo "Installing vim plugins..."
+  </dev/tty vim +PlugInstall +qall
+}
+
 function is_in_git_repo() {
     git rev-parse 2> /dev/null
 }
@@ -108,126 +238,28 @@ for option in $toInstall
 do
   case $option in
     "\"${_option_bash[0]}\"")
-      echo "Installing bash..."
-      ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
+      install_bash
       ;;
     "\"${_option_git[0]}\"")
-      echo "Installing git..."
-      ln -fs ${install_dir}/.git-config/config ~/.gitconfig
-      ln -fs ${install_dir}/.git-config/ ~/
+      install_git_config
       ;;
     "\"${_option_tmux[0]}\"")
-      echo "Installing tmux..."
-      ln -fs ${install_dir}/_tmux.conf ~/.tmux.conf
+      install_tmux_config
       ;;
     "\"${_option_vim[0]}\"")
-      echo "Installing vim..."
-      ln -fs ${install_dir}/.vim/_vimrc ~/.vimrc
-      ln -fs ${install_dir}/.vim/ ~/
-
-      echo "Installing vim plugins..."
-      </dev/tty vim +PlugInstall +qall
+      install_vim_config
       ;;
     "\"${_option_sh[0]}\"")
-      if [[ -d "${install_dir}/tools/sh" ]]; then
-        echo "Executing shell script installers..."
-        for FILE in $("ls" -1 "$install_dir/tools/sh/"*.sh) ; do
-          FILE="./$(realpath --relative-to="${PWD}" "$FILE")"
-          echo "Executing \"$FILE\"..."
-          bash "$FILE"
-        done
-      else
-        echo "Cannot execute shell script installers. Expected directory does not exist!"
-      fi
+      install_bash_installers
       ;;
     "\"${_option_apt[0]}\"")
-      if [[ $(which apt) ]]; then
-        # Use this trick to determine if we need to prefix the "sudo" command"
-        # Taken from https://stackoverflow.com/a/21622456/6504
-        local SUDO=''
-        if (( $EUID != 0 )); then
-          SUDO='sudo'
-        fi
-
-        $SUDO apt-get -qq update
-        if [[ -d "${install_dir}/tools/apt" ]]; then
-          local PACKAGES=''
-          for FILE in $("ls" -1 "${install_dir}/tools/apt/"*.apt) ; do
-            PACKAGES="$PACKAGES $(basename "$FILE" .apt)"
-          done
-
-          if [[ "$PACKAGES" != "" ]]; then
-            echo "$SUDO apt-get -q install $PACKAGES..."
-            $SUDO apt-get -q install $PACKAGES
-          fi
-        fi
-      else
-        echo "Apt is not installed, skipping..."
-      fi
+      install_apt_installers
       ;;
     "\"${_option_gitrepo[0]}\"")
-      XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
-      if [[ $(which git) ]]; then
-        echo "Starting to clone git repos..."
-        if [[ -d "${install_dir}/tools/git" ]]; then
-          for FILE in $("ls" -1 "${install_dir}/tools/git/"*.clone) ; do
-            local CLONE_PATH=$XDG_DATA_HOME/cloned-repos/$(basename "$FILE" .clone)
-            if [[ ! -d "$CLONE_PATH" ]]; then
-              echo "Need to make the git clone directory $CLONE_PATH"
-              mkdir -p "$CLONE_PATH"
-              git -C "$CLONE_PATH" init -q
-              git -C "$CLONE_PATH" config remote.origin.url "$("cat" $FILE)"
-              git -C "$CLONE_PATH" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-              git -C "$CLONE_PATH" config core.autocrlf "false"
-            fi
-
-            echo "git fetch origin master:origin/master --tags --force"
-            git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
-            git -C "$CLONE_PATH" reset --hard "origin/master"
-            bash "${install_dir}/tools/git/$(basename "$FILE" .clone).install.sh"
-          done
-        fi
-      else
-        echo "Git is not available, skipping..."
-      fi
+      install_git_repositories
       ;;
     "\"${_option_brew[0]}\"")
-      if [[ $(which brew) ]]; then
-        echo "Starting to brew install some packages..."
-        if [[ -d "${install_dir}/tools/brew" ]]; then
-          for TAP in $("ls" -1 "${install_dir}/tools/brew/"*.tap) ; do
-            local TAP_REPO=$("cat" $TAP)
-            TAP_REPO="${TAP_REPO/$'\r'/}"
-            if [[ "$(brew tap | grep ${TAP_REPO})" == "" ]]; then
-              echo "brew tap $TAP_REPO"
-              brew tap $TAP_REPO
-            fi
-          done
-
-          local BOTTLES=''
-          for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.brew) ; do
-            BOTTLES="$BOTTLES $(basename "$FILE" .brew)"
-          done
-          if [[ "$BOTTLES" != "" ]]; then
-            echo "brew install $BOTTLES..."
-            brew install $BOTTLES
-          fi
-
-          # Casks are MacOS only...
-          if [[ "$osname" == "Darwin" ]]; then
-            local CASKS=''
-            for FILE in $("ls" -1 "${install_dir}/tools/brew/"*.cask) ; do
-              CASKS="$CASKS $(basename $"FILE" .cask)"
-            done
-            if [[ "$CASKS" != "" ]]; then
-              echo "brew cask install $CASKS..."
-              brew cask install $CASKS
-            fi
-          fi
-        fi
-      else
-        echo "Brew is not installed, skipping..."
-      fi
+      install_homebrew_installers
       ;;
     *)
       echo "...I have no idea what to do for \"$option\"..."
