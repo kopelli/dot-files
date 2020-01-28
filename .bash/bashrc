@@ -1,11 +1,3 @@
-# For more things to flush this out, check out the following:
-#   http://tldp.org/LDP/abs/html/sample-bashrc.html
-#   https://gist.io/@tsutsu/2c11fc0a36000a46566e9fd62c60dea4
-#   https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
-#   https://dev.to/wparad/comment/gf21
-
-
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
