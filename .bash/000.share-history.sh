@@ -11,5 +11,7 @@ shopt -s histverify
 # Ignore history commands that start with whitespace or duplicate commands
 HISTCONTROL='ignoreboth'
 
-# Commit history for the window, clear history, and reload all history before showing the prompt
-PROMPT_COMMAND="history -a;history -c;history -r; $PROMPT_COMMAND"
+if [[ $PROMPT_COMMAND != *"history -c;"* ]]; then
+    # Commit history for the window, clear history, and reload all history before showing the prompt
+    PROMPT_COMMAND="history -a;history -c;history -r;$PROMPT_COMMAND"
+fi
