@@ -1,0 +1,1 @@
+nmap mm <Plug>ToggleMarkbar

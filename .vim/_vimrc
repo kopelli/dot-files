@@ -149,4 +149,5 @@ Plug 'scrooloose/nerdtree'
 Plug 'theWildSushii/SweetCandy.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-scripts/The-Vim-Gardener'
+Plug 'Yilin-Yang/vim-markbar'
 call plug#end()
