@@ -93,6 +93,24 @@ Function Get-MenuMultipleChoice() {
     }
 }
 
+Function Install-Bash() {
+}
+
+Function Install-Git() {
+}
+
+Function Install-Tmux() {
+}
+
+Function Install-Vim() {
+}
+
+Function Install-GitRepo() {
+}
+
+Function Is-In-Git-Repo() {
+    Write-Output $true
+}
 #==============================================================================
 # Menu configuration
 #==============================================================================
@@ -111,5 +129,48 @@ $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Vim,
     $Option_GitRepo)
 $userChoices = Get-MenuMultipleChoice -caption $Menu_Text -message $Menu_Message -choices $options
+# Should the user clear all the checkboxes, there's nothing else for us to do.
+# So bail early
+if ($userChoices.Length -eq 0) {
+    exit 0
+}
 
-$userChoices | Select-Object -ExpandProperty DisplayLabel
+if (Is-In-Git-Repo -eq $true) {
+    Write-Host "We're in a git repo, so assume this is the install directory"
+    #TODO: Loop through remotes and make sure one of the matches
+    #TODO: Find the root of the git repo
+    $Install_Dir = $PWD
+} else {
+    Write-Host "Where do you want to download the repo to?"
+    Write-Host "The 'dot-files' directory will be created automatically"
+    #TODO: Prompt for directory
+    $Install_Dir = $PWD
+}
+
+#==============================================================================
+# Perform installs
+#==============================================================================
+
+#TODO: Use $($PSVersionTable.OS) to determine
+Write-Host "Install directory is `"$Install_Dir`""
+
+switch ($($userChoices | Select-Object -ExpandProperty Label)) {
+    $Option_Bash.Label {
+        Install-Bash
+    }
+    $Option_Git.Label {
+        Install-Git
+    }
+    $Option_Tmux.Label {
+        Install-Tmux
+    }
+    $Option_Vim.Label {
+        Install-Vim
+    }
+    $Option_GitRepo.Label {
+        Install-GitRepo
+    }
+    default {
+        Write-Host "I have no idea what to do with `"$_`""
+    }
+}
