@@ -29,25 +29,33 @@ exit $?
 @echo %cmdcmdline% | FIND /i %SCRIPT% >nul
 @IF NOT errorlevel 1 SET SCRIPT_IS_INTERACTIVE=0
 
+:: Test if we have Powershell Core available on the system first. If we do, we should be checking that first.
+@WHERE pwsh
+@IF /I "%ERRORLEVEL%" NEQ "0" (
+  SET POWERSHELL_EXE=powershell
+) ELSE (
+  SET POWERSHELL_EXE=pwsh
+)
+
+
 @echo Checking default Powershell version
 @del /F "%TEMP%\powershell_%POWERSHELL_VERSION%" >nul 2>&1
-@powershell -Command "If ($PSVersionTable.PSVersion -lt [Version]::new("%POWERSHELL_MAJOR%","%POWERSHELL_MINOR%","%POWERSHELL_BUILD%")) { New-Item -ItemType File $env:TEMP\powershell_"%POWERSHELL_VERSION%" | Out-Null }"
+@%POWERSHELL_EXE% -Command "If ($PSVersionTable.PSVersion -lt [Version]::new("%POWERSHELL_MAJOR%","%POWERSHELL_MINOR%","%POWERSHELL_BUILD%")) { New-Item -ItemType File $env:TEMP\powershell_"%POWERSHELL_VERSION%" | Out-Null }"
 @IF EXIST "%TEMP%\powershell_%POWERSHELL_VERSION%" (
   echo Downloading %POWERSHELL_CORE_DOWNLOAD_URL%
-  ::@powershell -Command "Invoke-WebRequest %POWERSHELL_CORE_DOWNLOAD_URL% -OutFile $env:TEMP\%POWERSHELL_MSI%"
+  @%POWERSHELL_EXE% -Command "Invoke-WebRequest %POWERSHELL_CORE_DOWNLOAD_URL% -OutFile $env:TEMP\%POWERSHELL_MSI%"
   del /F "%TEMP%\powershell_%POWERSHELL_VERSION%" >nul 2>&1
-  ::@msiexec.exe /package "%TEMP%\%POWERSHELL_MSI%" /quiet ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
-  SET DUMMY=1
+  @msiexec.exe /package "%TEMP%\%POWERSHELL_MSI%" /quiet ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1
 )
 
 :: Check if the script is running as admin
 @NET Session >nul 2>&1
 @IF /I "%ERRORLEVEL%" EQU "0" (
   :: Running as admin
-  echo/
+  SET IS_ADMIN=1
 ) ELSE (
   :: Not admin...
-  echo/
+  SET IS_ADMIN=0
 )
 @pwsh -ExecutionPolicy RemoteSigned -File .\install.ps1 -Interactive
 
