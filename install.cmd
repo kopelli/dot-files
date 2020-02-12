@@ -30,7 +30,7 @@ exit $?
 @IF NOT errorlevel 1 SET SCRIPT_IS_INTERACTIVE=0
 
 :: Test if we have Powershell Core available on the system first. If we do, we should be checking that first.
-@WHERE pwsh
+@WHERE pwsh >nul
 @IF /I "%ERRORLEVEL%" NEQ "0" (
   SET POWERSHELL_EXE=powershell
 ) ELSE (
@@ -57,7 +57,7 @@ exit $?
   :: Not admin...
   SET IS_ADMIN=0
 )
-@pwsh -ExecutionPolicy RemoteSigned -File .\install.ps1 -Interactive
+@pwsh -ExecutionPolicy RemoteSigned -Interactive -File .\install.ps1 -PSMajorVersion "%POWERSHELL_MAJOR%" -PSMinorVersion "%POWERSHELL_MINOR%" -PSBuildVersion "%POWERSHELL_BUILD%"
 
 ::for /F "usebackq delims==" %%f IN (`dir /b "_*"`) DO (
 ::    SET _dot_file_=%%f
