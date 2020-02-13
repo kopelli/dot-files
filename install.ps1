@@ -94,18 +94,101 @@ Function Get-MenuMultipleChoice() {
 }
 
 Function Install-Bash() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".bashrc")
+    $TargetFile = (Join-Path $install_dir ".bash" "bashrc")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 }
 
 Function Install-Git() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".gitconfig")
+    $TargetFile = (Join-Path $install_dir ".git-config" "config")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".git-config")
+    $TargetFile = (Join-Path $install_dir ".git-config")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 }
 
 Function Install-Tmux() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".tmux.conf")
+    $TargetFile = (Join-Path $install_dir "_tmux.conf")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 }
 
 Function Install-Vim() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".vimrc")
+    $TargetFile = (Join-Path $install_dir ".vim" "_vimrc")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".vim")
+    $TargetFile = (Join-Path $install_dir ".vim")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+
+    # Windows requires the plugins to be in ~/vimfiles and not ~/.vim
+    # So symlink both...
+    $SymbolicFile = (Join-Path (Resolve-Path ~) "vimfiles")
+    $TargetFile = (Join-Path $install_dir ".vim")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+
+    Write-Host "Installing vim plugins"
+    vim +PlugInstall +qall
 }
 
 Function Install-GitRepo() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $VerbosePreference = "Continue"
+    if ($null -eq $env:XDG_DATA_HOME) {
+        $env:XDG_DATA_HOME = (Join-Path (Resolve-Path ~) ".local" "share")
+    }
+    $GIT_REPO_DIR = (Join-Path $install_dir "tools" "git")
+    Write-Verbose "GIT_REPO_DIR = $GIT_REPO_DIR"
+    Write-Host "Starting to clone git repos..."
+    if (Test-Path $GIT_REPO_DIR) {
+        Get-ChildItem -Path (Join-Path $GIT_REPO_DIR "*") -Include *.clone | ForEach-Object {
+            $FILE = (Get-Item $_)
+            $REPO_FILE_NAME = $FILE.Basename
+            $CLONE_PATH = (Join-Path $env:XDG_DATA_HOME "cloned-repos" $REPO_FILE_NAME)
+            if (-not (Test-Path $CLONE_PATH)) {
+                Write-Host "Need to make the git clone directory `"$CLONE_PATH`""
+                New-Item -ItemType Directory -Path $CLONE_PATH | Out-Null
+                & git -C "$CLONE_PATH" init -q
+                & git -C "$CLONE_PATH" config remote.origin.url "$(Get-Content $FILE)"
+                & git -C "$CLONE_PATH" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+                & git -C "$CLONE_PATH" config core.autocrlf "false"
+            } else {
+                Write-Host "Updating $REPO_FILE_NAME"
+            }
+            Write-Host "git -C `"$CLONE_PATH`" fetch origin master:origin/master --tags --force"
+            & git -C "$CLONE_PATH" fetch origin master:origin/master --tags --force
+            & git -C "$CLONE_PATH" reset --hard "origin/master"
+
+            Write-Host ">>$GIT_REPO_DIR\$REPO_FILE_NAME`.install.ps1"
+            & (Join-Path $GIT_REPO_DIR $REPO_FILE_NAME".install.ps1")
+            Write-Host "          ...DONE"
+
+        }
+    }
 }
 
 Function Is-In-Git-Repo() {
@@ -156,19 +239,19 @@ Write-Host "Install directory is `"$Install_Dir`""
 
 switch ($($userChoices | Select-Object -ExpandProperty Label)) {
     $Option_Bash.Label {
-        Install-Bash
+        Install-Bash $Install_Dir
     }
     $Option_Git.Label {
-        Install-Git
+        Install-Git $Install_Dir
     }
     $Option_Tmux.Label {
-        Install-Tmux
+        Install-Tmux $Install_Dir
     }
     $Option_Vim.Label {
-        Install-Vim
+        Install-Vim $Install_Dir
     }
     $Option_GitRepo.Label {
-        Install-GitRepo
+        Install-GitRepo $Install_Dir
     }
     default {
         Write-Host "I have no idea what to do with `"$_`""
