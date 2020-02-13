@@ -53,25 +53,20 @@ exit $?
 @IF /I "%ERRORLEVEL%" EQU "0" (
   :: Running as admin
   SET IS_ADMIN=1
+  pwsh -ExecutionPolicy RemoteSigned -Interactive -File .\install.ps1 -PSMajorVersion "%POWERSHELL_MAJOR%" -PSMinorVersion "%POWERSHELL_MINOR%" -PSBuildVersion "%POWERSHELL_BUILD%"
 ) ELSE (
   :: Not admin...
   SET IS_ADMIN=0
+  ECHO The installer must be run as an Admin.
+  EXIT /B 1
+  CALL :RUNAS pwsh -ExecutionPolicy RemoteSigned -Interactive -File .\install.ps1 -PSMajorVersion "%POWERSHELL_MAJOR%" -PSMinorVersion "%POWERSHELL_MINOR%" -PSBuildVersion "%POWERSHELL_BUILD%"
 )
-@pwsh -ExecutionPolicy RemoteSigned -Interactive -File .\install.ps1 -PSMajorVersion "%POWERSHELL_MAJOR%" -PSMinorVersion "%POWERSHELL_MINOR%" -PSBuildVersion "%POWERSHELL_BUILD%"
+@GOTO :Exit
 
-::for /F "usebackq delims==" %%f IN (`dir /b "_*"`) DO (
-::    SET _dot_file_=%%f
-::    SET _dot_file_=.!_dot_file_:~1!
-::REM    echo %USERPROFILE%\!_dot_file_!
-::    FOR /F "usebackq delims==" %%g IN (`dir /b /s "%%f"`) DO (
-::        SET _full_path_=%%g
-::    )
-::    del /q /f %USERPROFILE%\!_dot_file_!
-::    mklink %USERPROFILE%\!_dot_file_! !_full_path_!
-::)
-:: --delete actual file if it exists
-:: --mklink <Full path for link file> <full path of %%f>
-::
+:RUNAS
+%POWERSHELL_EXE% -Command "Start-Process -Verb runAs %*"
+EXIT /B 0
+
 :EXIT
 :: Pause only if the script was opened from Explorer
 @IF "%SCRIPT_IS_INTERACTIVE%"=="0" PAUSE
