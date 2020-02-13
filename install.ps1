@@ -128,6 +128,24 @@ Function Install-Powershell() {
     New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 }
 
+Function Install-PowershellInstallers() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+
+    $VerbosePreference = "Continue"
+    $POWERSHELL_DIR = (Join-Path $install_dir "tools" "powershell")
+    Write-Verbose "POWERSHELL_DIR = $POWERSHELL_DIR"
+    if (Test-Path $POWERSHELL_DIR) {
+        Write-Host "Executing Powershell script installers..."
+        Get-ChildItem -Path (Join-Path $POWERSHELL_DIR "*") -Include *.ps1 | ForEach-Object {
+            $FILE = (Resolve-Path $_)
+            Write-Host "Executing `"$FILE`""
+            & $FILE
+        }
+    }
+}
+
 Function Install-Tmux() {
     Param (
         [Parameter(Mandatory = $true)][string]$install_dir
@@ -215,6 +233,7 @@ $Option_Powershell = New-Object System.Management.Automation.Host.ChoiceDescript
 $Option_Tmux = New-Object System.Management.Automation.Host.ChoiceDescription '&TMUX', 'Configuration'
 $Option_Vim = New-Object System.Management.Automation.Host.ChoiceDescription '&Vim', 'Configuration & Plugins'
 $Option_GitRepo = New-Object System.Management.Automation.Host.ChoiceDescription 'Git &Repos', 'Direct Git repositories'
+$Option_PowershellInstallers = New-Object System.Management.Automation.Host.ChoiceDescription 'P&owershell Installs', 'Installations from pure Powershell scripts'
 
 $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Bash,
@@ -222,6 +241,7 @@ $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Powershell,
     $Option_Tmux,
     $Option_Vim,
+    $Option_PowershellInstallers,
     $Option_GitRepo)
 $userChoices = Get-MenuMultipleChoice -caption $Menu_Text -message $Menu_Message -choices $options
 # Should the user clear all the checkboxes, there's nothing else for us to do.
@@ -267,6 +287,9 @@ switch ($($userChoices | Select-Object -ExpandProperty Label)) {
     }
     $Option_Powershell.Label {
         Install-Powershell $Install_Dir
+    }
+    $Option_PowershellInstallers.Label {
+        Install-PowershellInstallers $Install_Dir
     }
     default {
         Write-Host "I have no idea what to do with `"$_`""
