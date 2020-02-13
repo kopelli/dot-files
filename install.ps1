@@ -118,6 +118,16 @@ Function Install-Git() {
     New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 }
 
+Function Install-Powershell() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $SymbolicFile = $PROFILE.CurrentUserCurrentHost
+    $TargetFile = (Join-Path $install_dir "powershell" "profile" "current-user-current-host.ps1")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+}
+
 Function Install-Tmux() {
     Param (
         [Parameter(Mandatory = $true)][string]$install_dir
@@ -201,6 +211,7 @@ $Menu_Text = "Select all that you would like to install"
 $Menu_Message = "Press [Enter] to continue installation"
 $Option_Bash = New-Object System.Management.Automation.Host.ChoiceDescription '&Bash', 'Configuration & supporting artifacts'
 $Option_Git = New-Object System.Management.Automation.Host.ChoiceDescription '&Git', 'User-level Configuration'
+$Option_Powershell = New-Object System.Management.Automation.Host.ChoiceDescription '&Powershell', 'User-level Configuration'
 $Option_Tmux = New-Object System.Management.Automation.Host.ChoiceDescription '&TMUX', 'Configuration'
 $Option_Vim = New-Object System.Management.Automation.Host.ChoiceDescription '&Vim', 'Configuration & Plugins'
 $Option_GitRepo = New-Object System.Management.Automation.Host.ChoiceDescription 'Git &Repos', 'Direct Git repositories'
@@ -208,6 +219,7 @@ $Option_GitRepo = New-Object System.Management.Automation.Host.ChoiceDescription
 $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Bash,
     $Option_Git,
+    $Option_Powershell,
     $Option_Tmux,
     $Option_Vim,
     $Option_GitRepo)
@@ -252,6 +264,9 @@ switch ($($userChoices | Select-Object -ExpandProperty Label)) {
     }
     $Option_GitRepo.Label {
         Install-GitRepo $Install_Dir
+    }
+    $Option_Powershell.Label {
+        Install-Powershell $Install_Dir
     }
     default {
         Write-Host "I have no idea what to do with `"$_`""
