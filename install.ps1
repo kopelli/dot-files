@@ -93,6 +93,36 @@ Function Get-MenuMultipleChoice() {
     }
 }
 
+Function Install-Chocolatey() {
+    Param (
+        [Parameter(Mandatory = $true)][string]$install_dir
+    )
+    $CHOCO_DIR = (Join-Path $install_dir "tools" "chocolatey")
+    Write-Verbose "CHOCO_DIR = $CHOCO_DIR"
+    Write-Host "Looping through Chocolatey packages..."
+    if (Test-Path $CHOCO_DIR) {
+        Write-Verbose "Packages: $packages"
+        $packages = Get-ChildItem -Path (Join-Path $CHOCO_DIR "*") -Include *.psm1 | ForEach-Object {
+            $ImportedModule = Import-Module -Name (Get-Item $_).FullName -PassThru
+            $result = [PSCustomObject]@{ PackageName = Get-PackageName }
+            Write-Verbose "Package Name: $($result.PackageName)"
+            if (Test-IsInstalled) {
+                $result | Add-Member -NotePropertyMembers @{Status="Installed"} -PassThru
+            } else {
+                $result | Add-Member -NotePropertyMembers @{Status="NotInstalled"} -PassThru
+            }
+            $ImportedModule | Remove-Module
+        }
+        $installedPackageNames = $packages | Where-Object { $_.Status -eq "Installed" } | Select-Object -ExpandProperty PackageName
+        if ($installedPackageNames.Length -gt 0) {
+            & choco upgrade $installedPackageNames --yes
+        }
+        $notinstalledPackageNames = $packages | Where-Object { $_.Status -eq "NotInstalled" } | Select-Object -ExpandProperty PackageName
+        if ($notinstalledPackageNames.Length -gt 0) {
+            & choco install $notinstalledPackageNames --yes
+        }
+    }
+}
 Function Install-Bash() {
     Param (
         [Parameter(Mandatory = $true)][string]$install_dir
@@ -234,6 +264,7 @@ $Option_Tmux = New-Object System.Management.Automation.Host.ChoiceDescription '&
 $Option_Vim = New-Object System.Management.Automation.Host.ChoiceDescription '&Vim', 'Configuration & Plugins'
 $Option_GitRepo = New-Object System.Management.Automation.Host.ChoiceDescription 'Git &Repos', 'Direct Git repositories'
 $Option_PowershellInstallers = New-Object System.Management.Automation.Host.ChoiceDescription 'P&owershell Installs', 'Installations from pure Powershell scripts'
+$Option_Chocolatey = New-Object System.Management.Automation.Host.ChoiceDescription '&Chocolatey', 'Chocolatey packages'
 
 $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Bash,
@@ -242,7 +273,8 @@ $options = [System.Management.Automation.Host.ChoiceDescription[]](
     $Option_Tmux,
     $Option_Vim,
     $Option_PowershellInstallers,
-    $Option_GitRepo)
+    $Option_GitRepo,
+    $Option_Chocolatey)
 $userChoices = Get-MenuMultipleChoice -caption $Menu_Text -message $Menu_Message -choices $options
 # Should the user clear all the checkboxes, there's nothing else for us to do.
 # So bail early
@@ -290,6 +322,9 @@ switch ($($userChoices | Select-Object -ExpandProperty Label)) {
     }
     $Option_PowershellInstallers.Label {
         Install-PowershellInstallers $Install_Dir
+    }
+    $Option_Chocolatey.Label {
+        Install-Chocolatey $Install_Dir
     }
     default {
         Write-Host "I have no idea what to do with `"$_`""
