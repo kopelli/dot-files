@@ -195,6 +195,11 @@ Function Install-Vim() {
     Write-Host "Installing $SymbolicFile ==> $TargetFile"
     New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
 
+    $SymbolicFile = (Join-Path (Resolve-Path ~) ".gvimrc")
+    $TargetFile = (Join-Path $install_dir ".vim" "gvimrc")
+    Write-Host "Installing $SymbolicFile ==> $TargetFile"
+    New-Item -ItemType SymbolicLink -Force -Path $SymbolicFile -Target $TargetFile | Out-Null
+
     $SymbolicFile = (Join-Path (Resolve-Path ~) ".vim")
     $TargetFile = (Join-Path $install_dir ".vim")
     Write-Host "Installing $SymbolicFile ==> $TargetFile"

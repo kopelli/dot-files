@@ -1,0 +1,5 @@
+" Do not include the Toolbar. Force myself to actually learn the commands
+set guioptions-=T
+
+" Set the preferred system font
+set guifont=Input

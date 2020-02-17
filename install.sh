@@ -196,6 +196,7 @@ function install_tmux_config() {
 function install_vim_config() {
   echo -e "Installing ${_color_MAGENTA}vim configuration${_color_RESET}..."
   ln -fs ${install_dir}/.vim/_vimrc ~/.vimrc
+  ln -fs ${install_dir}/.vim/gvimrc ~/.gvimrc
   ln -fs ${install_dir}/.vim/ ~/
 
   echo -e "Installing ${_color_MAGENTA}vim plugins${_color_RESET}..."
