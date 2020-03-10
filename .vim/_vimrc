@@ -141,8 +141,12 @@ Plug 'fxn/vim-monochrome'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'scrooloose/nerdtree'
-Plug 'theWildSushii/SweetCandy.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-scripts/The-Vim-Gardener'
 Plug 'Yilin-Yang/vim-markbar'
+
+" Colors
+Plug 'theWildSushii/SweetCandy.vim'
+Plug 'jaredgorski/spacecamp'
+
 call plug#end()
