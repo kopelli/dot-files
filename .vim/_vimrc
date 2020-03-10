@@ -149,5 +149,6 @@ Plug 'Yilin-Yang/vim-markbar'
 Plug 'theWildSushii/SweetCandy.vim'
 Plug 'jaredgorski/spacecamp'
 Plug 'haishanh/night-owl.vim'
+Plug 'crusoexia/vim-monokai'
 
 call plug#end()
