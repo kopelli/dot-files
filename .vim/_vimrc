@@ -148,5 +148,6 @@ Plug 'Yilin-Yang/vim-markbar'
 " Colors
 Plug 'theWildSushii/SweetCandy.vim'
 Plug 'jaredgorski/spacecamp'
+Plug 'haishanh/night-owl.vim'
 
 call plug#end()
