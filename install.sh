@@ -87,8 +87,10 @@ function install_apt_installers() {
 }
 
 function install_bash() {
-  echo -e "Installing ${_color_MAGENTA}bashrc${_color_RESET}..."
+  echo -e "Installing ${_color_MAGENTA}bash configurations${_color_RESET}..."
   ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
+  ln -fs ${install_dir}/.bash/bash_profile ~/.bash_profile
+  ln -fs ${install_dir}/.profile ~/.profile
 }
 
 function install_bash_installers() {
