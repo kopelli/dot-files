@@ -144,6 +144,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-scripts/The-Vim-Gardener'
 Plug 'Yilin-Yang/vim-markbar'
+Plug 'auwsmit/vim-active-numbers'
 
 " Colors
 Plug 'theWildSushii/SweetCandy.vim'
