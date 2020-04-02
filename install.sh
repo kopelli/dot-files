@@ -176,7 +176,7 @@ function install_homebrew_installers() {
       if [[ "$osname" == "Darwin" ]]; then
         local CASKS=''
         for FILE in $("ls" -1 "${BREW_DIR}/"*.cask) ; do
-          CASKS="$CASKS $(basename $"FILE" .cask)"
+          CASKS="$CASKS $(basename "$FILE" .cask)"
         done
         if [[ "$CASKS" != "" ]]; then
           echo -e "${_color_GRAY}>>brew cask install ${_color_BLUE}$CASKS${_color_GRAY}...${_color_RESET}"
