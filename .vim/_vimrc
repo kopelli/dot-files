@@ -148,9 +148,13 @@ Plug 'auwsmit/vim-active-numbers'
 Plug 'liuchengxu/vim-which-key'
 
 " Colors
+Plug 'metalelf0/base16-black-metal-scheme'
+Plug 'morhetz/gruvbox'
+Plug 'aonemd/kuroi.vim'
 Plug 'theWildSushii/SweetCandy.vim'
 Plug 'jaredgorski/spacecamp'
 Plug 'haishanh/night-owl.vim'
+Plug 'junegunn/seoul256.vim'
 Plug 'crusoexia/vim-monokai'
 
 call plug#end()
