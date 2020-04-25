@@ -4,7 +4,7 @@
 # Menu configuration
 #==============================================================================
 _menu_text="Select all that you would like to install\nPress [Enter] to continue installation"
-_option_bash=('BASH' ".bashrc" ON)
+_option_bash=('BASH' ".bashrc, environment, and scripts" ON)
 _option_git=('GIT' "Git configuration" ON)
 _option_tmux=('TMUX' "TMUX configuration" ON)
 _option_vim=('VIM' "Vim config & plugins" ON)
@@ -91,6 +91,24 @@ function install_bash() {
   ln -fs ${install_dir}/.bash/bashrc ~/.bashrc
   ln -fs ${install_dir}/.bash/bash_profile ~/.bash_profile
   ln -fs ${install_dir}/.profile ~/.profile
+
+  echo -e "Installing ${_color_MAGENTA}bash executables${_color_RESET}..."
+  local BIN_DIR="${install_dir}/.bash/bin"
+  if [[ -d "${BIN_DIR}" ]]; then
+    # Use this trick to determine if we need to prefix the "sudo" command"
+    # Taken from https://stackoverflow.com/a/21622456/6504
+    local SUDO=''
+    if (( $EUID != 0 )); then
+      SUDO='sudo'
+    fi
+
+    for FILE in $("ls" -1 "${BIN_DIR}/"*) ; do
+      EXE_NAME="$(basename "$FILE")"
+      LINK_TARGET="/usr/local/bin/${EXE_NAME}"
+      echo -e "${_color_GRAY}ln ${_color_GREEN}${FILE} ${_color_BLUE}${LINK_TARGET}${_color_RESET}"
+      $SUDO ln -fs ${FILE} ${LINK_TARGET}
+    done
+  fi
 }
 
 function install_bash_installers() {

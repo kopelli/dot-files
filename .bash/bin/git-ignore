@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+
+# This script is heavily inspired by https://github.com/tj/git-extras/blob/master/bin/git-ignore
+
+# This is used for private ignores
+: "${GIT_DIR:=$(git rev-parse --git-dir)}"
+# shellcheck disable=SC2181 # We need to check if we're in a git repo, and store the directory
+if [[ $? -ne 0 ]]; then
+  exit 2
+fi
+
+# Ensure the environment can handle this script
+getopt -T &>/dev/null
+if [[ $? -ne 4 ]]; then
+  echo "getopt version is too old! Cannot continue." >&2
+  exit 1
+fi
+
+function _HELP() {
+  cat <<HELP_CONTENT
+Usage: $(basename "$0") [options]
+
+Display or modify gitignore settings
+
+Options:
+ -l, --local                   Modify the local, shared settings
+ -g, --global                  Modify the global (machine) settings
+ -p, --private                 Modify the local, private settings
+HELP_CONTENT
+}
+
+function _HELP_AND_EXIT() {
+  _HELP
+  exit 1
+}
+
+function _SHOW_CONTENTS() {
+  local file="${2/#~/$HOME}"
+  local gitIgnoreScope=$1
+
+  if [[ -f "$file" ]]; then
+    echo "$gitIgnoreScope gitignore: $2" && cat "$file"
+  else
+    echo "There is no $gitIgnoreScope gitignore file at '$file'"
+  fi
+}
+
+function _ADD_PATTERNS() {
+  local file="${1/#~/$HOME}"
+  #echo "Adding pattern(s) to: $file"
+  for pattern in "${@:2}"; do
+    #echo "... adding '$pattern'"
+    (test -f "$file" && test "$pattern" && grep -q -F -x -- "$pattern" "$file") || echo "$pattern" >> "$file"
+  done
+}
+
+#===============================================================================
+# MAIN
+#===============================================================================
+
+OPTS=$(getopt --options "l,g,p,?" --longoptions "local,global,private,help" --name "$(basename "$0")" --shell "bash" -- "$@")
+# shellcheck disable=SC2181 # We want to get the execution status from getopt, which occurred in the subshell
+if [[ $? -ne 0 ]]; then
+  _HELP_AND_EXIT
+fi
+
+LOCAL_GITIGNORE_FILE="$(git rev-parse --show-toplevel)/.gitignore"
+GLOBAL_GITIGNORE_FILE="$(git config --global core.excludesfile)"
+PRIVATE_GITIGNORE_FILE="$(git rev-parse --show-toplevel)/${GIT_DIR}/info/exclude"
+
+if test $# -eq 0; then
+  # Nothing has been passed, so display all the ignored values
+  _SHOW_CONTENTS "global" "$GLOBAL_GITIGNORE_FILE"
+  _SHOW_CONTENTS "local" "$LOCAL_GITIGNORE_FILE"
+  _SHOW_CONTENTS "private" "$PRIVATE_GITIGNORE_FILE"
+else
+  # shellcheck disable=SC2086 # we want the globbing of this to occur so valid arguments can be splatted across.
+  set -- ${OPTS//\'/\"}
+  # Parameters have been passed, so add them to an applicable ignore
+  declare -a PATTERNS
+  GITIGNORE_SCOPE=
+  GITIGNORE_FILE=
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -l|--local)
+        if [[ -n "$GITIGNORE_SCOPE" ]]; then
+          _HELP_AND_EXIT
+        fi
+        GITIGNORE_SCOPE="local"
+        GITIGNORE_FILE=$LOCAL_GITIGNORE_FILE
+        shift 1
+        ;;
+      -g|--global)
+        if [[ -n "$GITIGNORE_SCOPE" ]]; then
+          _HELP_AND_EXIT
+        fi
+        GITIGNORE_SCOPE="global"
+        GITIGNORE_FILE=$GLOBAL_GITIGNORE_FILE
+        shift 1
+        ;;
+      -p|--private)
+        if [[ -n "$GITIGNORE_SCOPE" ]]; then
+          _HELP_AND_EXIT
+        fi
+        GITIGNORE_SCOPE="private"
+        GITIGNORE_FILE=$PRIVATE_GITIGNORE_FILE
+        shift 1
+        ;;
+      --)
+        # This is the "file list" separator...don't really care at this point
+        shift 1
+        ;;
+      \?|--help)
+        _HELP_AND_EXIT
+        ;;
+      *)
+        PATTERN="$1"
+        while [[ ! $PATTERN =~ ^\".+\"$ ]]; do
+          shift 1
+          PATTERN="$PATTERN $1"
+        done
+        IFS=":"
+        PATTERNS+=("${PATTERN//\"}")
+        unset IFS
+        shift 1
+    esac
+  done
+  if [[ -z "$GITIGNORE_SCOPE" ]]; then
+    GITIGNORE_SCOPE="local"
+    GITIGNORE_FILE="$(git rev-parse --show-toplevel)/.gitignore"
+  fi
+
+  if [[ "$GITIGNORE_SCOPE" == "global" && -z "$GITIGNORE_FILE" ]]; then
+    cat <<HOW_TO_SET_IGNORE
+The global gitignore does not appear to be set.
+
+Use 'git config --global --add core.excludesfile [...]' to set the path to your global gitignore.
+
+HOW_TO_SET_IGNORE
+    exit 3
+  fi
+
+  IFS=$'\t'
+  _ADD_PATTERNS "$GITIGNORE_FILE" "${PATTERNS[@]}" && echo
+  _SHOW_CONTENTS "$GITIGNORE_SCOPE" "$GITIGNORE_FILE"
+  unset IFS
+fi
