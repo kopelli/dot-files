@@ -2,3 +2,4 @@
 .vim/installed
 .vim/autoload/plug.vim
 .git-config/local-settings
+*.sw[a-z]
