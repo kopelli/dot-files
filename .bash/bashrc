@@ -14,7 +14,7 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 unset SOURCE
 
 # Borrowing this idea from https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
-for FILE in $DIR/*.sh ; do
+for FILE in "$DIR/"*.sh ; do
   source "$FILE"
 done
 
