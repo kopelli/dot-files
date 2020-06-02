@@ -1,1 +1,7 @@
-eval "$(nodenv init -)"
+_path=$HOME/.nodenv/shims
+
+if [[ ":$PATH" != *":$_path:"* ]]; then
+  eval "$(nodenv init -)"
+fi
+
+unset _path
