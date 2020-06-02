@@ -1,6 +1,6 @@
 #!/bin/bash
 func_exists=$(declare -f -F command_not_found_handle)
-if [[ -n "$func_exists" ]]; then
+if [[ -z "$func_exists" ]]; then
   command_not_found_handle() {
     # Store and pop the potential command
     _INPUT_COMMAND="$1"
