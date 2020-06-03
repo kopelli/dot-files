@@ -10,14 +10,16 @@ if [[ -z "$func_exists" ]]; then
     _cachePath="$XDG_CACHE_HOME/command_not_found"
     [[ ! -d "$_cachePath" ]] && mkdir -p "$_cachePath" > /dev/null
     _cachePath="$_cachePath/$(echo "$PATH" | md5sum | sed -e 's/[^A-Za-z0-9]/_/g')"
-    rm -f "$_cachePath"
-    IFS=":"
-    for p in $PATH; do
-      if [[ -d "$p" ]]; then
-        # The format of the file should be "executable|value"
-        find "$p" -maxdepth 1 -executable -type f -not -regex ".*\..*" -printf "executable|%p\n" >> "$_cachePath"
-      fi
-    done
+
+    if [[ ! -s "$_cachePath" ]]; then
+      IFS=":"
+      for p in $PATH; do
+        if [[ -d "$p" ]]; then
+          # The format of the file should be "executable|value"
+          find "$p" -maxdepth 1 -executable -type f -not -regex ".*\..*" -printf "executable|%p\n" >> "$_cachePath"
+        fi
+      done
+    fi
 
     _newCommand=$(fzf --query "$_INPUT_COMMAND" --select-1 --exit-0 --delimiter="\|" --with-nth=2 < "$_cachePath")
     case "$?" in
