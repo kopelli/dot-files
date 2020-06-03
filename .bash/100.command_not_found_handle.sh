@@ -21,7 +21,11 @@ if [[ -z "$func_exists" ]]; then
       done
     fi
 
-    _newCommand=$(fzf --query "$_INPUT_COMMAND" --select-1 --exit-0 --delimiter="\|" --with-nth=2 < "$_cachePath")
+    _searchFile="$(mktemp cnfh.XXX)"
+    trap 'rm -f "$_searchFile"' 0 2 3 15
+    cat "$_cachePath" >> "$_searchFile"
+
+    _newCommand=$(fzf --query "$_INPUT_COMMAND" --select-1 --exit-0 --delimiter="\|" --with-nth=2 < "$_searchFile")
     case "$?" in
       0)
         # Normal
