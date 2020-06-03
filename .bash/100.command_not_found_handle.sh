@@ -25,6 +25,12 @@ if [[ -z "$func_exists" ]]; then
     trap 'rm -f "$_searchFile"' 0 2 3 15
     cat "$_cachePath" >> "$_searchFile"
 
+    _npmScripts="$(realpath "$(find-up "$PWD" -iname "package.json" | head -n 1)")"
+    if [[ -s "$_npmScripts" ]]; then
+      #echo "Need to add the scripts from $_npmScripts"
+      jq --raw-output '.scripts | keys | map("npm|" + .) | reduce .[] as $script (""; . + "\n" + $script)' "$_npmScripts" 2>/dev/null >> "$_searchFile"
+    fi
+
     _newCommand=$(fzf --query "$_INPUT_COMMAND" --select-1 --exit-0 --delimiter="\|" --with-nth=2 < "$_searchFile")
     case "$?" in
       0)
@@ -36,6 +42,10 @@ if [[ -z "$func_exists" ]]; then
           executable)
             echo "${result[1]}" "$@"
             "${result[1]}" "$@"
+            ;;
+          npm)
+            echo "...npm run ${result[1]}..." "$@"
+            npm run "${result[1]}" "$@"
             ;;
         esac
         ;;
