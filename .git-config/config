@@ -4,6 +4,7 @@
 [include]
   path = ~/.git-config/default/core
   path = ~/.git-config/default/commit
+  path = ~/.git-config/default/fetch
   path = ~/.git-config/default/diff
   path = ~/.git-config/default/gc
   path = ~/.git-config/default/help
