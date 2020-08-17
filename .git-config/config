@@ -10,6 +10,7 @@
   path = ~/.git-config/default/help
   path = ~/.git-config/default/push
   path = ~/.git-config/default/rebase
+  path = ~/.git-config/default/status
   path = ~/.git-config/alias
   path = ~/.git-config/filter/lfs
 	path = ~/.git-config/local-settings
