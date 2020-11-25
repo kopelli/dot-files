@@ -15,7 +15,13 @@ unset SOURCE
 
 # Borrowing this idea from https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
 for FILE in "$DIR/"*.sh ; do
-  source "$FILE"
+  if [[ $__bashrc_bench ]]; then
+    TIMEFORMAT="$FILE: %R"
+    time source "$FILE"
+    unset TIMEFORMAT
+  else
+    source "$FILE"
+  fi
 done
 
 # Now let's override individual commands
@@ -25,6 +31,9 @@ for HOOK_SCRIPT in "$DIR/hooks/"*; do
     continue
   fi
 
+  if [[ $__bashrc_bench ]]; then
+    TIMEFORMAT="$HOOK_SCRIPT: %R"
+  fi
   REQS=($(basename "${HOOK_SCRIPT}" | tr '+' "\n"))
   SATISFIED_REQS=()
   for REQ in "${REQS[@]}"; do
@@ -37,7 +46,12 @@ for HOOK_SCRIPT in "$DIR/hooks/"*; do
 
   if [ "${#REQS[@]}" -eq "${#SATISFIED_REQS[@]}" ]; then
     # if the count of REQS equals SATISFIED_REQS, then we should run the script
-    source "${HOOK_SCRIPT}"
+    if [[ $__bashrc_bench ]]; then
+      time source "${HOOK_SCRIPT}"
+      unset TIMEFORMAT
+    else
+      source "${HOOK_SCRIPT}"
+    fi
   else
     UNSATISFIED_REQS=($(comm -13 <(printf '%s\n' "${SATISFIED_REQS[@]}" | LC_ALL=C sort) <(printf '%s\n' "${REQS[@]}" | LC_ALL=C sort)))
     # Uncomment the following line to debug why a hook isn't being imported
