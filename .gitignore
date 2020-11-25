@@ -3,3 +3,4 @@
 .vim/autoload/plug.vim
 .git-config/local-settings
 *.sw[a-z]
+.git-config/local-settings
