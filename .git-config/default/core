@@ -1,7 +1,7 @@
 [core]
   commentChar = "#"
   commitGraph = true
-  editor = vi
+  editor = "vi +16 +startinsert"
   safecrlf = false
   pager = cat
   whitespace = blank-at-eol, space-before-tab, tab-in-indent, tabwidth=2

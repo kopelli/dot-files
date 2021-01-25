@@ -1,0 +1,34 @@
+# ------------------------------------------------------------------------------
+# Header - type(scope): Brief description
+# ------------------------------------------------------------------------------
+#   * feat              A new feature - X.Y.0
+#   * fix               A bug fix - X.Y.Z
+#   * BREAKING CHANGE   Breaking change to public contract - X.0.0
+#   * docs              Change to documentation only
+#   * style             Code style change (whitespace, indent, etc.)
+#   * refactor          Functionality the same, no new functionality
+#   * perf              Affects runtime performance
+#   * test              Add/modifies automated tests
+#   * build             Changes to the local build process
+#   * ci                Changes to the CI/CD pipeline/workflow
+#   * chore             General tooling/config/minimum refactoring
+# ------------------------------------------------------------------------------
+type(scope): description
+
+# ------------------------------------------------------------------------------
+# Body - More detailed description (if necessary)
+# ------------------------------------------------------------------------------
+#   * Motivation behind the change
+#   * More detail into _why_ the change was necessary
+#   * More detail explaining other affected areas/down stream changes
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Footer - Associated issues, PRs, etc.
+# ------------------------------------------------------------------------------
+#   * Examples:
+#     - Resolves Issue #123
+#     - See PR #12
+#     - Closes Issue #345
+# ------------------------------------------------------------------------------
+
