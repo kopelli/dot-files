@@ -9,9 +9,10 @@
   committers = shortlog -s -n
   difc = diff --cached
   fuckit = reset --hard HEAD
-  glog = log --graph --abbrev-commit --decorate --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)"
-  graph = log --graph --oneline --decorate --all --full-history --author-date-order --no-notes
-  graphit = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  gr = log --abbrev-commit --all --color --decorate --graph --pretty=format:'%C(bold blue)%h%C(reset) %C(bold cyan)%aI%C(bold green)/%<(12)%ar %C(dim white) %aN%C(reset)%C(bold yellow)%d%C(reset)%n%x09%x09%C(white)%s%C(reset)'
+  gr1 = log --abbrev-commit --all --color --decorate --graph --pretty=format:'%C(bold blue)%h%C(reset) %C(bold green)%<(10,trunc)%ar %C(dim white) %aL%C(reset)%C(bold yellow)%d%C(reset) %C(white)%s%C(reset)'
+  graph = !git gr
+  graph1 = !git gr1
   minor = commit -am "Make minor changes"
   please = push --force-with-lease
   polish = commit -am "Polish"
