@@ -1,4 +1,4 @@
 [help]
-  autoCorrect = 1
+  autoCorrect = prompt
   format = man
   htmlPath = https://git-scm.com/docs/
