@@ -21,7 +21,7 @@ if [[ -z "$func_exists" ]]; then
       done
     fi
 
-    _searchFile="$(mktemp $XDG_CACHE_HOME/cnfh.XXX)"
+    _searchFile="$(mktemp "$XDG_CACHE_HOME/cnfh.XXX")"
     trap 'rm -f "$_searchFile"' 0 2 3 15
     cat "$_cachePath" >> "$_searchFile"
 
