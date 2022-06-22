@@ -25,8 +25,10 @@ if [[ -z "$func_exists" ]]; then
     trap 'rm -f "$_searchFile"' 0 2 3 15
     cat "$_cachePath" >> "$_searchFile"
 
-    _npmScripts="$(realpath "$(find-up "$PWD" -iname "package.json" | head -n 1)")"
-    if [[ -s "$_npmScripts" ]]; then
+    _npmScripts="$(find-up "$PWD" -iname "package.json" | head -n 1)"
+    if [[ -n "$_npmScripts" ]]; then
+      echo "npmScripts"
+      _npmScripts="$(realpath "$_npmScripts")"
       #echo "Need to add the scripts from $_npmScripts"
       jq --raw-output '.scripts | keys | map("npm|" + .) | reduce .[] as $script (""; . + "\n" + $script)' "$_npmScripts" 2>/dev/null >> "$_searchFile"
     fi
