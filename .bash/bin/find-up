@@ -5,6 +5,6 @@ path="$1"
 shift 1
 while [[ "$path" != / ]]; do
   find "$path" -maxdepth 1 -mindepth 1 "$@"
-  path="$(realpath -s "$path"/..)"
+  path="$(realpath -s "$path"/.. 2> /dev/null)"
 done
 
