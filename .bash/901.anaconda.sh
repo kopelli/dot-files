@@ -6,7 +6,7 @@ else
     if [ -f "$HOME/opt/anaconda3/etc/profile.d/conda.sh" ]; then
         . "$HOME/opt/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/scevans/opt/anaconda3/bin:$PATH"
+        export PATH="$HOME/opt/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
