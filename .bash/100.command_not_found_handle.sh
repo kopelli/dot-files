@@ -16,7 +16,7 @@ if [[ -z "$func_exists" ]]; then
       for p in $PATH; do
         if [[ -d "$p" ]]; then
           # The format of the file should be "executable|value"
-          find "$p" -maxdepth 1 -executable -not -regex ".*\..*" -printf "executable|%p\n" >> "$_cachePath"
+          find "$p" -maxdepth 1 -executable -not -regex ".*\..*" -printf "executable|%p\n" 2> /dev/null >> "$_cachePath"
         fi
       done
     fi
