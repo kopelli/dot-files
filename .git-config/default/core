@@ -2,6 +2,7 @@
   commentChar = "#"
   commitGraph = true
   editor = "vi +16 +startinsert"
+  fsmonitor = true
   safecrlf = false
   pager = cat
   whitespace = blank-at-eol, space-before-tab, tab-in-indent, tabwidth=2
