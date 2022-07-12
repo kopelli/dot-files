@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+function main() {
+  local CURRENT_SCRIPT
+  CURRENT_SCRIPT="$(realpath "${0}")"
+  local BREW_TOOL_PATH
+  BREW_TOOL_PATH="$(realpath -s "$(dirname "${CURRENT_SCRIPT}")/../../tools/brew")"
+  echo "Examining repo files from '${BREW_TOOL_PATH}'"
+
+  local INSTALLED_FORMULAS_FILE
+  INSTALLED_FORMULAS_FILE=$(mktemp -p /tmp _brew_inst_form.XXXX)
+  brew leaves --installed-on-request > "${INSTALLED_FORMULAS_FILE}"
+  local INSTALLED_CASKS_FILE
+  INSTALLED_CASKS_FILE=$(mktemp -p /tmp _brew_inst_cask.XXXX)
+  brew list -1 --cask > "${INSTALLED_CASKS_FILE}"
+  local REPO_FORMULAS_FILE
+  REPO_FORMULAS_FILE=$(mktemp -p /tmp _brew_repo_form.XXXX)
+  find "${BREW_TOOL_PATH}" -maxdepth 1 -name "*.brew" -type f -print0 | xargs --null -I '{}' basename '{}' .brew | sort > "${REPO_FORMULAS_FILE}"
+  local REPO_CASKS_FILE
+  REPO_CASKS_FILE=$(mktemp -p /tmp _brew_repo_cask_XXXX)
+  find "${BREW_TOOL_PATH}" -maxdepth 1 -name "*.cask" -type f -print0 | xargs --null -I '{}' basename '{}' .cask | sort > "${REPO_CASKS_FILE}"
+
+  echo "----INSTALLED_FORMULA_NOT_IN_REPO----"
+  comm --check-order -23 "${INSTALLED_FORMULAS_FILE}" "${REPO_FORMULAS_FILE}"
+  echo "----REPO_FORMULA_NOT_INSTALLED----"
+  comm --check-order -13 "${INSTALLED_FORMULAS_FILE}" "${REPO_FORMULAS_FILE}"
+  echo "----INSTALLED_CASK_NOT_IN_REPO----"
+  comm --check-order -23 "${INSTALLED_CASKS_FILE}" "${REPO_CASKS_FILE}"
+  echo "----REPO_CASK_NOT_INSTALLED----"
+  comm --check-order -13 "${INSTALLED_CASKS_FILE}" "${REPO_CASKS_FILE}"
+}
+
+main
