@@ -1,4 +1,5 @@
 [push]
+  autoSetupRemote = true
   default = simple
   followTags = true
   gpgSign = if-asked
