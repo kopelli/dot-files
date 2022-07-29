@@ -20,7 +20,7 @@
   cmd = \"BComp.exe\" \"$LOCAL\" \"$REMOTE\"
 [difftool "bcomp"]
   path = "/Applications/Beyond Compare.app/Contents/MacOS/"
-	cmd = "bcomp" \"$LOCAL\" \"$REMOTE\"
+	cmd = "bcomp" -fileviewer=\"Text Compare\" \"$LOCAL\" \"$REMOTE\"
 [mergetool "bcomp"]
   path = "/Applications/Beyond Compare.app/Contents/MacOS/"
-	cmd = "bcomp" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+	cmd = "bcomp" -fileviewer=\"Text Merge\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
