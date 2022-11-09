@@ -3,4 +3,4 @@
   autoSquash = false
   autoStash = true
   missingCommitsCheck = error
-
+  updateRefs = true
