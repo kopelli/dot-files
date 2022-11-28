@@ -13,6 +13,25 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 unset SOURCE
 
+
+# Helper function for forcing items to the front of $PATH
+function prepend_path() {
+  local _PATH="${1}"
+  if [[ -d "${_PATH}" ]]; then
+    __CURRENT_PATH="${PATH}"
+    __CURRENT_PATH="${__CURRENT_PATH/:"${_PATH}":/:}" # Replace instance where it is in the middle
+    __CURRENT_PATH="${__CURRENT_PATH/"${_PATH}":/}" # Replace instance where it is at the beginning
+    __CURRENT_PATH="${__CURRENT_PATH/:"${_PATH}"/}" # Replace instance where it is at the end
+    #echo "${_PATH}"
+    #echo "${PATH}"
+    #echo
+    #echo "${_PATH}:${__CURRENT_PATH}"
+    #echo
+    export PATH="${_PATH}:${__CURRENT_PATH}"
+  fi
+}
+export -f prepend_path
+
 # Borrowing this idea from https://sneak.berlin/20191011/stupid-unix-tricks/#modular-bashrc
 for FILE in "$DIR/"*.sh ; do
   if [[ $__bashrc_bench ]]; then
@@ -66,3 +85,5 @@ done
 export INPUTRC="$(realpath "$DIR/../.inputrc")"
 
 unset DIR
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
