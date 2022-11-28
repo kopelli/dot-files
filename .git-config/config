@@ -9,6 +9,7 @@
   path = ~/.git-config/default/gc
   path = ~/.git-config/default/help
   path = ~/.git-config/default/init
+  path = ~/.git-config/default/pull
   path = ~/.git-config/default/push
   path = ~/.git-config/default/rebase
   path = ~/.git-config/default/status
