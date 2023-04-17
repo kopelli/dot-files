@@ -36,3 +36,8 @@ Function prompt {
     + "]`n" `
     + $(if ($NestedPromptLevel -ge 1) { ">>" }) + "> "
 }
+
+Get-Command -ErrorAction SilentlyContinue -ErrorVariable StarshipExists starship | Out-Null
+if ("$StarshipExists" -eq "") {
+    Invoke-Expression (&starship init powershell)
+}
