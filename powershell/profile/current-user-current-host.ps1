@@ -17,6 +17,11 @@ if (Test-Path($Script:ChocolatelyProfile)) {
     Import-Module $Script:ChocolatelyProfile
 }
 
+$Script:OktaAwsCliProfile = "$PSScriptRoot\okta-aws-cli.psm1"
+if (Test-Path($Script:OktaAwsCliProfile)) {
+    Import-Module $Script:OktaAwsCliProfile
+}
+
 # Configure XDG variables...mainly for nvim
 $env:XDG_CONFIG_HOME=(Join-Path $env:USERPROFILE ".config")
 $env:XDG_DATA_HOME=$env:LOCALAPPDATA
