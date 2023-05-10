@@ -17,6 +17,12 @@ if (Test-Path($Script:ChocolatelyProfile)) {
     Import-Module $Script:ChocolatelyProfile
 }
 
+# Configure XDG variables...mainly for nvim
+$env:XDG_CONFIG_HOME=(Join-Path $env:USERPROFILE ".config")
+$env:XDG_DATA_HOME=$env:LOCALAPPDATA
+# XDG_RUNTIME_DIR is fine to stay in TMP
+$env:XDG_STATE_HOME=$env:LOCALAPPDATA
+
 # Define the custom prompt
 Function prompt {
     $ESC = [char]27
