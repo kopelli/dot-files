@@ -1,5 +1,16 @@
-$Script:ProgramDataBin=(Join-Path $env:ProgramData "bin")
-$env:PATH="$Script:ProgramDataBin;$env:PATH"
+Function DirectoryIsInPath {
+	param(
+		[string] $path
+	)
+
+	if ( (Test-Path($path)) -and -not ($env:PATH -match [regex]::Escape($path))) {
+		$env:PATH="$path;$env:PATH"
+	}
+}
+
+DirectoryIsInPath(Join-Path $env:ProgramData "bin")
+DirectoryIsInPath(Join-Path $env:LocalAppData "Keybase")
+Remove-Item -Path Function:DirectoryIsInPath
 
 $Script:ChocolatelyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($Script:ChocolatelyProfile)) {
