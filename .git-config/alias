@@ -19,6 +19,7 @@
   root = rev-parse --show-toplevel
   s = status --short --branch
   st = status --short --branch
+  stash-untracked = !f(){git stash;git stash -u;git stash pop stash@{1};};f
   this = !git init && git add . && git commit -m \"initial commit\" --allow-empty
   typo = commit -am "Fix typo"
   undo = reset --soft HEAD^
