@@ -22,6 +22,22 @@ if (Test-Path($Script:OktaAwsCliProfile)) {
     Import-Module $Script:OktaAwsCliProfile
 }
 
+# TODO: Should probably check that 'aws' and 'aws_completer' are available commands...
+Register-ArgumentCompleter -Native -CommandName aws -ScriptBlock {
+    param($commandName, $wordToComplete, $cursorPosition)
+
+    $env:COMP_LINE = $wordToComplete
+    if ($env:COMP_LINE.length -lt $cursorPosition) {
+	    $env:COMP_LINE = $env:COMP_LINE + " "
+    }
+    $env:COMP_POINT = $cursorPosition
+    aws_completer.exe | ForEach-Object {
+	    [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+    }
+    Remove-Item Env:\COMP_LINE
+    Remove-Item Env:\COMP_POINT
+}
+
 # Configure XDG variables...mainly for nvim
 $env:XDG_CONFIG_HOME=(Join-Path $env:USERPROFILE ".config")
 $env:XDG_DATA_HOME=$env:LOCALAPPDATA
