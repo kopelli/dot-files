@@ -88,3 +88,4 @@ if ("$StarshipExists" -eq "") {
       $host.ui.Write($prompt)
     }
 }
+Set-Alias -Name gclean -Value (Join-Path $PSScriptRoot "scripts" "Invoke-Clean.ps1")
