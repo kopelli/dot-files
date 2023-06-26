@@ -5,8 +5,8 @@ param (
 )
 
 # Ensure we're running on the version we expect
-$ExpectedVersion = [version]::new($PSMajorVersion, $PSMinorVersion, $PSBuildVersion)
-If ($PSVersionTable.PSVersion -ne $ExpectedVersion) {
+$ExpectedVersion = [System.Management.Automation.SemanticVersion]::new($PSMajorVersion, $PSMinorVersion, $PSBuildVersion)
+If (($PSVersionTable.PSVersion).CompareTo($ExpectedVersion) -lt 0) {
     Write-Error -Message "Expected version $($ExpectedVersion.ToString()), but we are running on $($PSVersionTable.PSVersion.ToString())"
     exit 1
 }
