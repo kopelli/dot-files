@@ -7,6 +7,7 @@
   ch = checkout
   co = checkout
   committers = shortlog -s -n
+  dif = diff --word-diff-regex='\w+'
   difc = diff --cached
   fuckit = reset --hard HEAD
   gr = log --abbrev-commit --all --color --decorate --graph --pretty=format:'%C(bold blue)%h%C(reset) %C(bold cyan)%aI%C(bold green)/%<(12)%ar %C(dim white) %aN%C(reset)%C(bold yellow)%d%C(reset)%n%x09%x09%C(white)%s%C(reset)'
