@@ -1,7 +1,7 @@
 Function Start-Solution() {
        param()
 
-       $private:SolutionFiles = Get-ChildItem -Path . -Recurse -Depth 3 *.sln
+       $private:SolutionFiles = Get-ChildItem -Path . -Recurse -Depth 3  -Include *.sln,*.slnf
        if ($private:SolutionFiles -is [array]) {
                $private:Choices = $private:SolutionFiles | ForEach-Object -Begin { $private:index = 65 } -Process {
                        $private:file = $_
