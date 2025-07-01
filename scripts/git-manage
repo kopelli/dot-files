@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+main() {
+  local POWERSHELL_SCRIPT_FILE="$1"
+  shift
+
+  if ! POWERSHELL_EXE="$(type -p "pwsh")" || [[ -z ${POWERSHELL_EXE} ]]; then
+    printf "Powershell not available.\nPlease choose the appropriate means of installing for this environment:\n\nhttps://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell\n" 1>&2
+    exit 1
+  fi
+
+  "$POWERSHELL_EXE" -ExecutionPolicy RemoteSigned -Interactive -File "$POWERSHELL_SCRIPT_FILE" $@
+}
+
+pushd -n "$(dirname $(readlink -f "$0"))" > /dev/null
+main git-manage.ps1 $@
+popd -n > /dev/null

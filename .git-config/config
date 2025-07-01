@@ -25,3 +25,5 @@
 [mergetool "bcomp"]
   path = "/Applications/Beyond Compare.app/Contents/MacOS/"
 	cmd = "bcomp" -fileviewer=\"Text Merge\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+[core]
+	sshCommand = \"C:/WINDOWS/System32/OpenSSH/ssh.exe\"
